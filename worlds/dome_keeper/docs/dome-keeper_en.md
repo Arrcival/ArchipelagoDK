@@ -4,7 +4,7 @@
 
 For Steam-based installation, subscribe to the following mod:
 
-- [Archipelago mod]()
+- [Archipelago mod](https://steamcommunity.com/sharedfiles/filedetails/?id=3148616716)
 
 ## Configuring your YAML file
 
