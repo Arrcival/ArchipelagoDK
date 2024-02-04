@@ -1,6 +1,6 @@
 from typing import NamedTuple, Optional, List
 from BaseClasses import Entrance, MultiWorld, Region
-from .Locations import DomeKeeperLocation, location_table
+from .Locations import DomeKeeperLocation, generate_locations
 
 class DomeKeeperRegionData(NamedTuple):
     locations: Optional[List[str]]
@@ -10,7 +10,7 @@ def create_regions(world, player: int):
 
     world.regions += [
         create_region(world, player, 'Menu', exits=['Menu exit']),
-        create_region(world, player, 'On Map', locations=location_table)
+        create_region(world, player, 'On Map', locations=generate_locations())
     ]
 
     # link up our region with the entrance we just made

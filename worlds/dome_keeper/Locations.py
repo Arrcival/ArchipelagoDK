@@ -1,5 +1,6 @@
 from typing import Dict, NamedTuple, Optional
 from BaseClasses import Location
+from worlds.dome_keeper.Items import MAX_UPGRADES_POSSIBLE
 
 class DomeKeeperLocation(Location):
     game: str = "Dome Keeper"
@@ -8,7 +9,12 @@ class DomeKeeperLocationData(NamedTuple):
     name: str
     code: Optional[int] = None
 
-location_table: Dict[str, DomeKeeperLocationData] = {
+UPGRADES_AMOUNT = 12
+
+SWITCHES_AMOUNT = MAX_UPGRADES_POSSIBLE - UPGRADES_AMOUNT
+SWITCHES_FIRST_ID = 4243101
+
+location_table_upgrades: Dict[str, DomeKeeperLocationData] = {
     "Upgrade Iron 1":  DomeKeeperLocationData("Upgrade unlock",     4243001),
     "Upgrade Iron 2":  DomeKeeperLocationData("Upgrade unlock",     4243002),
     "Upgrade Iron 3":  DomeKeeperLocationData("Upgrade unlock",     4243003),
@@ -21,26 +27,13 @@ location_table: Dict[str, DomeKeeperLocationData] = {
     "Upgrade Iron and Water 2":  DomeKeeperLocationData("Upgrade unlock",   4243010),
     "Upgrade Iron and Water 3":  DomeKeeperLocationData("Upgrade unlock",   4243011),
     "Upgrade Iron and Water 4":  DomeKeeperLocationData("Upgrade unlock",   4243012),
-    "Switch found 1":  DomeKeeperLocationData("Switch found unlock",  4243101),
-    "Switch found 2":  DomeKeeperLocationData("Switch found unlock",  4243102),
-    "Switch found 3":  DomeKeeperLocationData("Switch found unlock",  4243103),
-    "Switch found 4":  DomeKeeperLocationData("Switch found unlock",  4243104),
-    "Switch found 5":  DomeKeeperLocationData("Switch found unlock",  4243105),
-    "Switch found 6":  DomeKeeperLocationData("Switch found unlock",  4243106),
-    "Switch found 7":  DomeKeeperLocationData("Switch found unlock",  4243107),
-    "Switch found 8":  DomeKeeperLocationData("Switch found unlock",  4243108),
-    "Switch found 9":  DomeKeeperLocationData("Switch found unlock",  4243109),
-    "Switch found 10":  DomeKeeperLocationData("Switch found unlock", 4243110),
-    "Switch found 11":  DomeKeeperLocationData("Switch found unlock", 4243111),
-    "Switch found 12":  DomeKeeperLocationData("Switch found unlock", 4243112),
-    "Switch found 13":  DomeKeeperLocationData("Switch found unlock", 4243113),
-    "Switch found 14":  DomeKeeperLocationData("Switch found unlock", 4243114),
-    "Switch found 15":  DomeKeeperLocationData("Switch found unlock", 4243115),
-    "Switch found 16":  DomeKeeperLocationData("Switch found unlock", 4243116),
-    "Switch found 17":  DomeKeeperLocationData("Switch found unlock", 4243117),
-    "Switch found 18":  DomeKeeperLocationData("Switch found unlock", 4243118),
-    "Switch found 19":  DomeKeeperLocationData("Switch found unlock", 4243119),
-    "Switch found 20":  DomeKeeperLocationData("Switch found unlock", 4243120),
-    "Switch found 21":  DomeKeeperLocationData("Switch found unlock", 4243121),
-    "Switch found 22":  DomeKeeperLocationData("Switch found unlock", 4243122),
 }
+
+def generate_locations() -> Dict[str, DomeKeeperLocationData] :
+    rtr = location_table_upgrades.copy()
+    for i in range(SWITCHES_AMOUNT):
+        rtr["Switch found " + str(i + 1)] = DomeKeeperLocationData("Switch found", SWITCHES_FIRST_ID + i)
+    return rtr
+
+def get_locations_amount() -> int:
+    return len(location_table_upgrades.keys()) + SWITCHES_AMOUNT
