@@ -24,10 +24,10 @@ from .Regions import create_regions
 class DomeKeeperItem(Item):
     game = "Dome Keeper"
 
-    def __init__(self, code, name, player: int = None):
+    def __init__(self, code, name, classification, player: int = None):
         super(DomeKeeperItem, self).__init__(
             name,
-            ItemClassification.useful,
+            classification,
             code,
             player
         )
@@ -63,7 +63,7 @@ class DomeKeeperWorld(World):
 
     def create_items(self):
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
-        pool = []
+        pool: list[Item] = []
         if self.options.keeper == Keeper.option_Engineer:
             pool += generate_items(items_engineer, self.player)
         if self.options.keeper == Keeper.option_Assessor:
@@ -112,12 +112,12 @@ def generate_items(itemDataCodes: list[ItemDataCode], player):
     for itemDataCode in itemDataCodes:
         #print("Item data count of " + itemDataCode.data.name + " : " + str(itemDataCode.data.count))
         for _ in range(itemDataCode.data.count):
-            values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, player))
+            values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
     return values
 
 def generate_junk_cobalts(player, amount):
     # edit later for traps
     values = []
     for _ in range(amount):
-        values.append(DomeKeeperItem(item_filler_cobalt.code, item_filler_cobalt.data.name, player))
+        values.append(DomeKeeperItem(item_filler_cobalt.code, item_filler_cobalt.data.name, item_filler_cobalt.data.classification, player))
     return values
