@@ -34,7 +34,7 @@ item_filler_cobalt: ItemDataCode = ItemDataCode(dome_keeper_index_cobalt, ItemDa
 item_trap_wavestart: ItemDataCode = ItemDataCode(dome_keeper_index_trap, ItemData("Wave start", classification=IC.trap))
 
 
-item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 4))
+item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 6))
 item_engineer_jetpack: ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 1, ItemData("Jetpack upgrade", 4))
 item_engineer_carry  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 2, ItemData("Carry upgrade", 4))
 
@@ -92,20 +92,20 @@ items_tesla = [
 ]
 
 item_repellent_delay     : ItemDataCode = ItemDataCode(dome_keeper_index_repellent + 0, ItemData("Repellent delay", 3))
-item_repellent_special   : ItemDataCode = ItemDataCode(dome_keeper_index_repellent + 1, ItemData("Repellent special", 3))
+item_repellent_special   : ItemDataCode = ItemDataCode(dome_keeper_index_repellent + 1, ItemData("Repellent ability", 3))
 item_repellent_overcharge: ItemDataCode = ItemDataCode(dome_keeper_index_repellent + 2, ItemData("Repellent overcharge", 5))
 
 items_repellent = [item_repellent_delay, item_repellent_special, item_repellent_overcharge]
 
 item_shield_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_shield + 0, ItemData("Shield strength", 3))
-item_shield_special   : ItemDataCode = ItemDataCode(dome_keeper_index_shield + 1, ItemData("Shield special", 3))
+item_shield_special   : ItemDataCode = ItemDataCode(dome_keeper_index_shield + 1, ItemData("Shield ability", 3))
 item_shield_overcharge: ItemDataCode = ItemDataCode(dome_keeper_index_shield + 2, ItemData("Shield overcharge", 3))
 
 items_shield = [item_shield_strength, item_shield_special, item_shield_overcharge]
 
 item_orchard_duration    : ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 0, ItemData("Fruit duration", 3))
 item_orchard_overcharge  : ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 1, ItemData("Orchard overcharge", 2))
-item_orchard_special     : ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 2, ItemData("Orchard special", 3))
+item_orchard_special     : ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 2, ItemData("Orchard ability", 3))
 item_orchard_speed_boost : ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 3, ItemData("Fruit speed boost", 3))
 item_orchard_mining_boost: ItemDataCode = ItemDataCode(dome_keeper_index_orchard + 4, ItemData("Fruit mining boost", 3))
 
