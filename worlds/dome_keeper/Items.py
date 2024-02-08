@@ -3,7 +3,7 @@ from typing import NamedTuple, Dict
 
 dome_keeper_index = 4242000
 
-MAX_UPGRADES_POSSIBLE = 28 + 20 + 14
+MAX_UPGRADES_POSSIBLE = 31 + 20 + 14
 
 class ItemData(NamedTuple):
     name: str
@@ -34,14 +34,14 @@ item_filler_cobalt: ItemDataCode = ItemDataCode(dome_keeper_index_cobalt, ItemDa
 item_trap_wavestart: ItemDataCode = ItemDataCode(dome_keeper_index_trap, ItemData("Wave start", classification=IC.trap))
 
 
-item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 6))
+item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 7))
 item_engineer_jetpack: ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 1, ItemData("Jetpack upgrade", 4))
 item_engineer_carry  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 2, ItemData("Carry upgrade", 4))
 
 items_engineer = [item_engineer_drill, item_engineer_jetpack, item_engineer_carry]
 
 item_assessor_movement          : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 0, ItemData("Gravitational movement", 4))
-item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", 4))
+item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", 7))
 item_assessor_bundles           : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 2, ItemData("Bundles upgrade", 4))
 item_assessor_spheres_supply    : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 3, ItemData("Sphere supply upgrade", 6))
 item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade", 6))
@@ -68,7 +68,7 @@ items_laser = [item_laser_strength, item_laser_speed, item_laser_sight]
 item_sword_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_sword + 0, ItemData("Sword strength", 4))
 item_sword_aimline   : ItemDataCode = ItemDataCode(dome_keeper_index_sword + 1, ItemData("Sword aim line", 1))
 item_sword_stab      : ItemDataCode = ItemDataCode(dome_keeper_index_sword + 2, ItemData("Sword better stab", 4))
-item_sword_reflection: ItemDataCode = ItemDataCode(dome_keeper_index_sword + 3, ItemData("Sword Reflection", 5))
+item_sword_reflection: ItemDataCode = ItemDataCode(dome_keeper_index_sword + 3, ItemData("Sword reflection", 5))
 
 items_sword = [item_sword_strength, item_sword_aimline, item_sword_stab, item_sword_reflection]
 
