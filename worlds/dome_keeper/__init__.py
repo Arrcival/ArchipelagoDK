@@ -1,6 +1,8 @@
+import math
 import string
-from BaseClasses import Item, ItemClassification, Tutorial
+from BaseClasses import Item, Tutorial
 from worlds.AutoWorld import WebWorld, World
+from worlds.dome_keeper.Rules import set_rules_colored_layers
 from .Items import (
     ItemDataCode,
     generate_all_items,
@@ -14,11 +16,12 @@ from .Items import (
     items_orchard,
     items_repellent,
     item_trap_wavestart,
-    item_filler_cobalt
+    item_filler_cobalt,
+    item_layers_unlock
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget
-from .Locations import generate_locations, get_locations_amount, SWITCHES_AMOUNT
-from .Regions import create_regions
+from .Locations import UPGRADES_AMOUNT, generate_locations_data
+from .Regions import create_every_regions
 
 
 class DomeKeeperItem(Item):
@@ -51,49 +54,89 @@ class DomeKeeperWorld(World):
     options_dataclass = DomeKeeperOptions
     options: DomeKeeperOptions
     item_name_to_id = {data.name: id for id, data in generate_all_items().items()}
-    location_name_to_id = {name: data.code for name, data in generate_locations().items()}
+    location_name_to_id = {name: data.code for name, data in generate_locations_data().items()}
     topology_present = True
     web = DomeKeeperWeb()
     required_client_version = (0, 4, 4)
 
     base_id = 4242001
 
+    pool: list[Item] = []
+    itempoolcount = 0
+    switchesPerLayer: list[int] = []
+    goalItems: list[str] = []
+        
     def set_rules(self):
-        pass
+        set_rules_colored_layers(self, self.player)
+
+    def generate_early(self):
+        if self.options.keeper == Keeper.option_Engineer:
+            self.itempoolcount += 15
+        if self.options.keeper == Keeper.option_Assessor:
+            self.itempoolcount += 31
+
+        if self.options.dome == Dome.option_Laser:
+            self.itempoolcount += 9
+        if self.options.dome == Dome.option_Sword:
+            self.itempoolcount += 14
+        if self.options.dome == Dome.option_Artillery:
+            self.itempoolcount += 10
+        if self.options.dome == Dome.option_Tesla:
+            self.itempoolcount += 20
+        
+        if self.options.dome_gadget == DomeGadget.option_Repellent:
+            self.itempoolcount += 11
+        if self.options.dome_gadget == DomeGadget.option_Shield:
+            self.itempoolcount += 9
+        if self.options.dome_gadget == DomeGadget.option_Orchard:
+            self.itempoolcount += 14
+
+        self.itempoolcount += self.options.extra_cobalt.value
+
+        if self.options.colored_layers.value:
+            self.itempoolcount += getLayersAmountBasedOnMapSize(self.options.map_size.value) - 1
+
+            self.goalItems = [item.name for item in generate_progression_items(self.player, self.options.map_size.value)]
+        
+        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_AMOUNT, self.options.map_size.value)
+        
 
     def create_items(self):
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
-        pool: list[Item] = []
         if self.options.keeper == Keeper.option_Engineer:
-            pool += generate_items(items_engineer, self.player)
+            self.pool += generate_items(items_engineer, self.player)
         if self.options.keeper == Keeper.option_Assessor:
-            pool += generate_items(items_assessor, self.player)
+            self.pool += generate_items(items_assessor, self.player)
 
         if self.options.dome == Dome.option_Laser:
-            pool += generate_items(items_laser, self.player)
+            self.pool += generate_items(items_laser, self.player)
         if self.options.dome == Dome.option_Sword:
-            pool += generate_items(items_sword, self.player)
+            self.pool += generate_items(items_sword, self.player)
         if self.options.dome == Dome.option_Artillery:
-            pool += generate_items(items_artillery, self.player)
+            self.pool += generate_items(items_artillery, self.player)
         if self.options.dome == Dome.option_Tesla:
-            pool += generate_items(items_tesla, self.player)
+            self.pool += generate_items(items_tesla, self.player)
         
         if self.options.dome_gadget == DomeGadget.option_Orchard:
-            pool += generate_items(items_orchard, self.player)
+            self.pool += generate_items(items_orchard, self.player)
         if self.options.dome_gadget == DomeGadget.option_Repellent:
-            pool += generate_items(items_repellent, self.player)
+            self.pool += generate_items(items_repellent, self.player)
         if self.options.dome_gadget == DomeGadget.option_Shield:
-            pool += generate_items(items_shield, self.player)
+            self.pool += generate_items(items_shield, self.player)
 
-        pool += generate_junk_cobalts(self.player, get_locations_amount() - len(pool))
+        if self.options.colored_layers.value:
+            self.pool += generate_progression_items(self.player, self.options.map_size.value)
 
-        self.multiworld.itempool += pool
+        self.pool += generate_junk_cobalts(self.player, self.options.extra_cobalt.value)
+
+        self.multiworld.itempool += self.pool
+
 
     def create_item(self, name: str) -> Item:
         return DomeKeeperItem(name, self.player)
-    
+        
     def create_regions(self):
-        create_regions(self.multiworld, self.player)
+        create_every_regions(self)
 
     def fill_slot_data(self) -> dict:
         return {
@@ -104,8 +147,14 @@ class DomeKeeperWorld(World):
             "mapSize": self.options.map_size.value,
             "difficulty": self.options.difficulty.value,
             "deathLink": self.options.death_link.value,
-            "switchesAmount": SWITCHES_AMOUNT
+            "switchesPerLayers": self.switchesPerLayer,
+            "drillUpgrades": self.options.drill_upgrades.value,
+            "kineticSpheres": self.options.kinetic_spheres.value,
+            "sphereLifetime": self.options.sphere_lifetime.value,
+            "coloredLayersProgression": self.options.colored_layers.value,
+            "miningEverything": self.options.mining_everything.value
         }
+
 
 def generate_items(itemDataCodes: list[ItemDataCode], player):
     values = []
@@ -115,9 +164,37 @@ def generate_items(itemDataCodes: list[ItemDataCode], player):
             values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
     return values
 
+def generate_progression_items(player: int, mapSize: int):
+    values: list[DomeKeeperItem] = []
+    layers = getLayersAmountBasedOnMapSize(mapSize)
+    for i in range(layers):
+        if i == 0:
+            continue
+        item = item_layers_unlock[i - 1]
+        values.append(DomeKeeperItem(item.code, item.data.name, item.data.classification, player))
+    return values
+
 def generate_junk_cobalts(player, amount):
     # edit later for traps
     values = []
     for _ in range(amount):
         values.append(DomeKeeperItem(item_filler_cobalt.code, item_filler_cobalt.data.name, item_filler_cobalt.data.classification, player))
     return values
+
+def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
+    # Small : 3, medium : 4, large : 6, huge: 7
+    layers = getLayersAmountBasedOnMapSize(mapSize)
+    
+    max_value = math.floor(switchesAmount / layers)
+    remaining = switchesAmount % layers
+    result = [max_value] * layers
+    for i in range(remaining):
+        result[i] += 1
+
+    return result
+
+def getLayersAmountBasedOnMapSize(mapSize: int) -> int:
+    layers = mapSize + 3
+    if mapSize >= 2:
+        layers += 1
+    return layers

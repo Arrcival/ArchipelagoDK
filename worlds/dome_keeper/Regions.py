@@ -1,28 +1,66 @@
-from typing import NamedTuple, Optional, List
-from BaseClasses import Entrance, MultiWorld, Region
-from .Locations import DomeKeeperLocation, generate_locations
+from typing import NamedTuple, Optional, List, Dict, TYPE_CHECKING
+from BaseClasses import Region
+from .Locations import (
+    DomeKeeperLocationData, 
+    generate_switches_location, 
+    location_table_easy_upgrades, 
+    location_table_hard_upgrades,
+    location_table_normal_upgrades
+)
+
+if TYPE_CHECKING:
+    from . import DomeKeeperWorld
 
 class DomeKeeperRegionData(NamedTuple):
     locations: Optional[List[str]]
     region_exits: Optional[List[str]]
 
-def create_regions(world, player: int):
+def create_every_regions(world: "DomeKeeperWorld"):
 
-    world.regions += [
-        create_region(world, player, 'Menu', exits=['Menu exit']),
-        create_region(world, player, 'On Map', locations=generate_locations())
-    ]
+    menuRegion = Region("Menu", world.player, world.multiworld)
+    world.multiworld.regions.append(menuRegion)
 
+    locations = generate_switches_location()
+    switchesPerLayer = world.switchesPerLayer
+
+    layerNumber = 1
+    switchIndex = 0
+    for switches in switchesPerLayer:
+        region = Region("Layer " + str(layerNumber), world.player, world.multiworld)
+        mappedLocations = map_locations_switches(locations, switchIndex, switches)
+        region.add_locations(mappedLocations)
+
+        if layerNumber == 1:
+            region.add_locations(map_locations(location_table_easy_upgrades))
+        if layerNumber == 2:
+            region.add_locations(map_locations(location_table_normal_upgrades))
+        if layerNumber == 3:
+            region.add_locations(map_locations(location_table_hard_upgrades))
+        
+        world.multiworld.regions.append(region)
+        if layerNumber >= 2:
+            world.multiworld.get_region('Layer ' + str(layerNumber - 1), world.player).connect(region)
+
+        switchIndex += switches
+        layerNumber += 1
+    
     # link up our region with the entrance we just made
-    world.get_entrance('Menu exit', player).connect(world.get_region('On Map', player))
+    world.multiworld.get_region('Menu', world.player).connect(world.multiworld.get_region('Layer 1', world.player))
 
-def create_region(world: MultiWorld, player: int, name: str, locations=None, exits=None):
-    ret = Region(name, player, world)
-    if locations:
-        for name, loc in locations.items():
-            ret.locations.append(DomeKeeperLocation(player, name, loc.code, ret))
-    if exits:
-        for exit in exits:
-            ret.exits.append(Entrance(player, exit, ret))
+    world.multiworld.completion_condition[world.player] = lambda state: state.has_all(
+        world.goalItems, world.player
+    )
 
-    return ret
+
+def map_locations_switches(locations: Dict[str, DomeKeeperLocationData], switchIndex, switches) -> Dict[str, int]:
+    rtr: Dict[str, int] = {}
+    for i in range(switchIndex, switchIndex + switches):
+        switchName = "Switch " + str(i + 1)
+        rtr[switchName] = locations[switchName].code
+    return rtr
+
+def map_locations(locations: Dict[str, DomeKeeperLocationData]) -> Dict[str, int]:
+    rtr: Dict[str, int] = {}
+    for key in locations.keys():
+        rtr[key] = locations[key].code
+    return rtr

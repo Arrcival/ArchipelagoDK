@@ -29,19 +29,20 @@ dome_keeper_index_shield = dome_keeper_index + 70
 dome_keeper_index_orchard = dome_keeper_index + 80
 dome_keeper_index_cobalt = dome_keeper_index + 90
 dome_keeper_index_trap = dome_keeper_index + 91
+dome_keeper_index_layers = dome_keeper_index + 100
 
 item_filler_cobalt: ItemDataCode = ItemDataCode(dome_keeper_index_cobalt, ItemData("Extra cobalt", classification=IC.filler))
 item_trap_wavestart: ItemDataCode = ItemDataCode(dome_keeper_index_trap, ItemData("Wave start", classification=IC.trap))
 
 
-item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 7))
+item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 7, classification=IC.progression))
 item_engineer_jetpack: ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 1, ItemData("Jetpack upgrade", 4))
 item_engineer_carry  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 2, ItemData("Carry upgrade", 4))
 
 items_engineer = [item_engineer_drill, item_engineer_jetpack, item_engineer_carry]
 
 item_assessor_movement          : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 0, ItemData("Gravitational movement", 4))
-item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", 7))
+item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", 7, classification=IC.progression))
 item_assessor_bundles           : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 2, ItemData("Bundles upgrade", 4))
 item_assessor_spheres_supply    : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 3, ItemData("Sphere supply upgrade", 6))
 item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade", 6))
@@ -60,7 +61,7 @@ items_assessor = [
 ]
 
 item_laser_strength: ItemDataCode = ItemDataCode(dome_keeper_index_laser + 0, ItemData("Laser strength", 5))
-item_laser_speed   : ItemDataCode = ItemDataCode(dome_keeper_index_laser + 1, ItemData("Laser speed",3))
+item_laser_speed   : ItemDataCode = ItemDataCode(dome_keeper_index_laser + 1, ItemData("Laser speed", 3))
 item_laser_sight   : ItemDataCode = ItemDataCode(dome_keeper_index_laser + 2, ItemData("Laser sight", 1))
 
 items_laser = [item_laser_strength, item_laser_speed, item_laser_sight]
@@ -111,9 +112,18 @@ item_orchard_mining_boost: ItemDataCode = ItemDataCode(dome_keeper_index_orchard
 
 items_orchard = [item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost]
 
+item_layer_unlock_two  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 0, ItemData("Second layer unlock", 1, classification=IC.progression))
+item_layer_unlock_three: ItemDataCode = ItemDataCode(dome_keeper_index_layers + 1, ItemData("Third layer unlock", 1, classification=IC.progression))
+item_layer_unlock_four : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 2, ItemData("Fourth layer unlock", 1, classification=IC.progression))
+item_layer_unlock_five : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 3, ItemData("Fifth layer unlock", 1, classification=IC.progression))
+item_layer_unlock_six  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 4, ItemData("Sixth layer unlock", 1, classification=IC.progression))
+item_layer_unlock_seven: ItemDataCode = ItemDataCode(dome_keeper_index_layers + 5, ItemData("Seventh layer unlock", 1, classification=IC.progression))
+
+item_layers_unlock = [item_layer_unlock_two, item_layer_unlock_three, item_layer_unlock_four, item_layer_unlock_five, item_layer_unlock_six, item_layer_unlock_seven]
+
 def generate_all_items() -> Dict[int, ItemData]:
     rtr: Dict[int, ItemData] = {}
-    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard:
+    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard + item_layers_unlock:
         rtr[idc.code] = idc.data
     rtr[item_filler_cobalt.code] = item_filler_cobalt.data
     rtr[item_trap_wavestart.code] = item_trap_wavestart.data
