@@ -17,7 +17,7 @@ from .Items import (
     items_repellent,
     item_trap_wavestart,
     item_filler_cobalt,
-    item_layers_unlock
+    item_layer_unlock
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget
 from .Locations import UPGRADES_AMOUNT, generate_locations_data
@@ -170,8 +170,7 @@ def generate_progression_items(player: int, mapSize: int):
     for i in range(layers):
         if i == 0:
             continue
-        item = item_layers_unlock[i - 1]
-        values.append(DomeKeeperItem(item.code, item.data.name, item.data.classification, player))
+        values.append(DomeKeeperItem(item_layer_unlock.code, item_layer_unlock.data.name, item_layer_unlock.data.classification, player))
     return values
 
 def generate_junk_cobalts(player, amount):

@@ -112,19 +112,13 @@ item_orchard_mining_boost: ItemDataCode = ItemDataCode(dome_keeper_index_orchard
 
 items_orchard = [item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost]
 
-item_layer_unlock_two  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 0, ItemData("Second layer unlock", 1, classification=IC.progression))
-item_layer_unlock_three: ItemDataCode = ItemDataCode(dome_keeper_index_layers + 1, ItemData("Third layer unlock", 1, classification=IC.progression))
-item_layer_unlock_four : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 2, ItemData("Fourth layer unlock", 1, classification=IC.progression))
-item_layer_unlock_five : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 3, ItemData("Fifth layer unlock", 1, classification=IC.progression))
-item_layer_unlock_six  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 4, ItemData("Sixth layer unlock", 1, classification=IC.progression))
-item_layer_unlock_seven: ItemDataCode = ItemDataCode(dome_keeper_index_layers + 5, ItemData("Seventh layer unlock", 1, classification=IC.progression))
-
-item_layers_unlock = [item_layer_unlock_two, item_layer_unlock_three, item_layer_unlock_four, item_layer_unlock_five, item_layer_unlock_six, item_layer_unlock_seven]
+item_layer_unlock  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 0, ItemData("Layer unlock", 6, classification=IC.progression))
 
 def generate_all_items() -> Dict[int, ItemData]:
     rtr: Dict[int, ItemData] = {}
-    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard + item_layers_unlock:
+    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard:
         rtr[idc.code] = idc.data
+    rtr[item_layer_unlock.code] = item_layer_unlock.data    
     rtr[item_filler_cobalt.code] = item_filler_cobalt.data
     rtr[item_trap_wavestart.code] = item_trap_wavestart.data
     return rtr
