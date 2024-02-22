@@ -17,7 +17,10 @@ from .Items import (
     items_repellent,
     item_trap_wavestart,
     item_filler_cobalt,
-    item_layer_unlock
+    item_layer_unlock,
+    item_engineer_drill,
+    item_assessor_spheres_strength,
+    item_assessor_spheres_lifetime
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget
 from .Locations import UPGRADES_AMOUNT, generate_locations_data
@@ -71,9 +74,12 @@ class DomeKeeperWorld(World):
 
     def generate_early(self):
         if self.options.keeper == Keeper.option_Engineer:
-            self.itempoolcount += 15
+            self.itempoolcount += 8
+            self.itempoolcount += self.options.drill_upgrades.value
         if self.options.keeper == Keeper.option_Assessor:
-            self.itempoolcount += 31
+            self.itempoolcount += 18
+            self.itempoolcount += self.options.kinetic_spheres.value
+            self.itempoolcount += self.options.sphere_lifetime.value
 
         if self.options.dome == Dome.option_Laser:
             self.itempoolcount += 9
@@ -105,8 +111,11 @@ class DomeKeeperWorld(World):
         # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
         if self.options.keeper == Keeper.option_Engineer:
             self.pool += generate_items(items_engineer, self.player)
+            self.pool += generate_item(item_engineer_drill, self.player, self.options.drill_upgrades.value)
         if self.options.keeper == Keeper.option_Assessor:
             self.pool += generate_items(items_assessor, self.player)
+            self.pool += generate_item(item_assessor_spheres_strength, self.player, self.options.kinetic_spheres.value)
+            self.pool += generate_item(item_assessor_spheres_lifetime, self.player, self.options.sphere_lifetime.value)
 
         if self.options.dome == Dome.option_Laser:
             self.pool += generate_items(items_laser, self.player)
@@ -155,8 +164,14 @@ class DomeKeeperWorld(World):
             "miningEverything": self.options.mining_everything.value
         }
 
+def generate_item(itemDataCode: ItemDataCode, player, amount) -> list[DomeKeeperItem]:
+    values = []
+    for _ in range(amount):
+        values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
+    return values
 
-def generate_items(itemDataCodes: list[ItemDataCode], player):
+
+def generate_items(itemDataCodes: list[ItemDataCode], player) -> list[DomeKeeperItem]:
     values = []
     for itemDataCode in itemDataCodes:
         #print("Item data count of " + itemDataCode.data.name + " : " + str(itemDataCode.data.count))

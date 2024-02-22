@@ -48,7 +48,7 @@ class DrillUpgradesAmount(Range):
     """The amount of drill upgrades (when playing engineer) in the item pool.
     It is not recommended to go lower than 6~7 on large/huge maps.
     """
-    range_start = 4
+    range_start = 5
     range_end = 10
     default = 7
     display_name = "Drill upgrades"
@@ -56,7 +56,7 @@ class DrillUpgradesAmount(Range):
 class KineticSpheresUpgradesAmount(Range):
     """The amount of kinetic spheres upgrades (when playing assessor) in the item pool.
     It is not recommended to go lower than 6~7 on large/huge maps."""
-    range_start = 4
+    range_start = 5
     range_end = 10
     default = 7
     display_name = "Kinetic spheres upgrades"

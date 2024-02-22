@@ -35,27 +35,25 @@ item_filler_cobalt: ItemDataCode = ItemDataCode(dome_keeper_index_cobalt, ItemDa
 item_trap_wavestart: ItemDataCode = ItemDataCode(dome_keeper_index_trap, ItemData("Wave start", classification=IC.trap))
 
 
-item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", 7, classification=IC.progression))
+item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", classification=IC.progression))
 item_engineer_jetpack: ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 1, ItemData("Jetpack upgrade", 4))
 item_engineer_carry  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 2, ItemData("Carry upgrade", 4))
 
-items_engineer = [item_engineer_drill, item_engineer_jetpack, item_engineer_carry]
+items_engineer = [item_engineer_jetpack, item_engineer_carry]
 
 item_assessor_movement          : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 0, ItemData("Gravitational movement", 4))
-item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", 7, classification=IC.progression))
+item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", classification=IC.progression))
 item_assessor_bundles           : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 2, ItemData("Bundles upgrade", 4))
 item_assessor_spheres_supply    : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 3, ItemData("Sphere supply upgrade", 6))
-item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade", 6))
+item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade"))
 # one of the three upgrade and it's better upgrade
 item_assessor_spheres_special   : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 5, ItemData("Sphere special upgrade", 2))
 item_assessor_compression_mining: ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 6, ItemData("Compression mining upgrade", 2))
 
 items_assessor = [
     item_assessor_movement,
-    item_assessor_spheres_strength,
     item_assessor_bundles,
     item_assessor_spheres_supply,
-    item_assessor_spheres_lifetime,
     item_assessor_spheres_special,
     item_assessor_compression_mining,
 ]
@@ -121,4 +119,7 @@ def generate_all_items() -> Dict[int, ItemData]:
     rtr[item_layer_unlock.code] = item_layer_unlock.data    
     rtr[item_filler_cobalt.code] = item_filler_cobalt.data
     rtr[item_trap_wavestart.code] = item_trap_wavestart.data
+    rtr[item_engineer_drill.code] = item_engineer_drill.data
+    rtr[item_assessor_spheres_strength.code] = item_assessor_spheres_strength.data
+    rtr[item_assessor_spheres_lifetime.code] = item_assessor_spheres_lifetime.data
     return rtr

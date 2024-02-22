@@ -8,15 +8,15 @@ if TYPE_CHECKING:
 def set_rules_colored_layers(world: "DomeKeeperWorld", player: int):
     if world.options.colored_layers.value:
         set_rule(world.multiworld.get_entrance("Layer 1 -> Layer 2", player),
-                 lambda state: state.has("Layer unlock", player, 1) and has_mining_upgrade(state, player, 1))
+                 lambda state: state.has("Layer unlock", player, 1) and has_mining_upgrade(state, player, 2))
         set_rule(world.multiworld.get_entrance("Layer 2 -> Layer 3", player),
-                 lambda state: state.has("Layer unlock", player, 2) and has_mining_upgrade(state, player, 2))
+                 lambda state: state.has("Layer unlock", player, 2) and has_mining_upgrade(state, player, 3))
         if world.options.map_size.value >= 1:
             set_rule(world.multiworld.get_entrance("Layer 3 -> Layer 4", player),
-                    lambda state: state.has("Layer unlock", player, 3) and has_mining_upgrade(state, player, 3))
+                    lambda state: state.has("Layer unlock", player, 3) and has_mining_upgrade(state, player, 4))
         if world.options.map_size.value >= 2:
             set_rule(world.multiworld.get_entrance("Layer 4 -> Layer 5", player),
-                    lambda state: state.has("Layer unlock", player, 4) and has_mining_upgrade(state, player, 4))
+                    lambda state: state.has("Layer unlock", player, 4) and has_mining_upgrade(state, player, 5))
             set_rule(world.multiworld.get_entrance("Layer 5 -> Layer 6", player),
                     lambda state: state.has("Layer unlock", player, 5))
         if world.options.map_size.value >= 3:
@@ -25,15 +25,15 @@ def set_rules_colored_layers(world: "DomeKeeperWorld", player: int):
         
     else:
         set_rule(world.multiworld.get_entrance("Layer 1 -> Layer 2", player),
-            lambda state: has_mining_upgrade(state, player, 1))
-        set_rule(world.multiworld.get_entrance("Layer 2 -> Layer 3", player),
             lambda state: has_mining_upgrade(state, player, 2))
+        set_rule(world.multiworld.get_entrance("Layer 2 -> Layer 3", player),
+            lambda state: has_mining_upgrade(state, player, 3))
         if world.options.map_size.value >= 1:
             set_rule(world.multiworld.get_entrance("Layer 3 -> Layer 4", player),
-                lambda state: has_mining_upgrade(state, player, 3))
+                lambda state: has_mining_upgrade(state, player, 4))
         if world.options.map_size.value >= 2:
             set_rule(world.multiworld.get_entrance("Layer 4 -> Layer 5", player),
-                lambda state: has_mining_upgrade(state, player, 4))
+                lambda state: has_mining_upgrade(state, player, 5))
         
         
 def has_mining_upgrade(state: CollectionState, player: int, tier: int) -> bool:
