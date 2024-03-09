@@ -99,12 +99,17 @@ class DomeKeeperWorld(World):
 
         self.itempoolcount += self.options.extra_cobalt.value
 
+
+        layer_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
+
+        # progression items to unlock layers
         if self.options.colored_layers.value:
-            self.itempoolcount += getLayersAmountBasedOnMapSize(self.options.map_size.value) - 1
+            self.itempoolcount += layer_amount - 1
 
             self.goalItems = [item.name for item in generate_progression_items(self.player, self.options.map_size.value)]
         
-        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_AMOUNT, self.options.map_size.value)
+        # amount of items minus upgrades minus caves (which is the amount of layers)
+        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_AMOUNT - layer_amount, self.options.map_size.value)
         
 
     def create_items(self):
@@ -199,6 +204,7 @@ def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
     # Small : 3, medium : 4, large : 6, huge: 7
     layers = getLayersAmountBasedOnMapSize(mapSize)
     
+    # Splits evenly switches per layers avaible
     max_value = math.floor(switchesAmount / layers)
     remaining = switchesAmount % layers
     result = [max_value] * layers
@@ -208,6 +214,10 @@ def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
     return result
 
 def getLayersAmountBasedOnMapSize(mapSize: int) -> int:
+    # Small is 0 : 3 layers
+    # Medium is 1 : 4 layers
+    # Large is 2 : 6 layers
+    # Huge is 3 : 7 layers
     layers = mapSize + 3
     if mapSize >= 2:
         layers += 1

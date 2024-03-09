@@ -1,8 +1,5 @@
 from typing import Dict, NamedTuple, Optional
-from BaseClasses import Location
 
-class DomeKeeperLocation(Location):
-    game: str = "Dome Keeper"
 
 class DomeKeeperLocationData(NamedTuple):
     name: str
@@ -11,9 +8,10 @@ class DomeKeeperLocationData(NamedTuple):
 UPGRADES_AMOUNT = 12
 
 SWITCHES_FIRST_ID = 4243101
-
 SWITCHES_MAX_AMOUNT = 61
 
+CAVE_FIRST_ID = 4243020
+CAVES_MAX_AMOUNT = 7
 
 location_table_easy_upgrades : Dict[str, DomeKeeperLocationData] = {
     "Upgrade Iron 1":  DomeKeeperLocationData("Upgrade unlock",     4243001),
@@ -41,10 +39,17 @@ location_table_upgrades: Dict[str, DomeKeeperLocationData] = location_table_easy
 def generate_locations_data() -> Dict[str, DomeKeeperLocationData] :
     rtr: Dict[str, DomeKeeperLocationData] = location_table_upgrades.copy()
     rtr = rtr | generate_switches_location()
+    rtr = rtr | generate_caves_location()
     return rtr
 
 def generate_switches_location() -> Dict[str, DomeKeeperLocationData] :
     rtr = {}
     for i in range(SWITCHES_MAX_AMOUNT):
         rtr["Switch " + str(i + 1)] = DomeKeeperLocationData("Switch " + str(i + 1), SWITCHES_FIRST_ID + i)
+    return rtr
+
+def generate_caves_location() -> Dict[str, DomeKeeperLocationData] :
+    rtr = {}
+    for i in range(CAVES_MAX_AMOUNT):
+        rtr["Cave " + str(i + 1)] = DomeKeeperLocationData("Cave " + str(i + 1), CAVE_FIRST_ID + i)
     return rtr
