@@ -23,7 +23,7 @@ from .Items import (
     item_assessor_spheres_lifetime
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget
-from .Locations import UPGRADES_AMOUNT, generate_locations_data
+from .Locations import UPGRADES_LOCATIONS_AMOUNT, generate_locations_data
 from .Regions import create_every_regions
 
 
@@ -99,21 +99,19 @@ class DomeKeeperWorld(World):
 
         self.itempoolcount += self.options.extra_cobalt.value
 
-
-        layer_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
-
         # progression items to unlock layers
         if self.options.colored_layers.value:
-            self.itempoolcount += layer_amount - 1
+            goalItems = [item.name for item in generate_progression_items(self.player, self.options.map_size.value)]
+            self.itempoolcount += len(goalItems)
 
-            self.goalItems = [item.name for item in generate_progression_items(self.player, self.options.map_size.value)]
+            self.goalItems = goalItems
         
+        layers_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
         # amount of items minus upgrades minus caves (which is the amount of layers)
-        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_AMOUNT - layer_amount, self.options.map_size.value)
+        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount, self.options.map_size.value)
         
 
     def create_items(self):
-        # Fill out our pool with our items from item_pool, assuming 1 item if not present in item_pool
         if self.options.keeper == Keeper.option_Engineer:
             self.pool += generate_items(items_engineer, self.player)
             self.pool += generate_item(item_engineer_drill, self.player, self.options.drill_upgrades.value)
@@ -179,17 +177,14 @@ def generate_item(itemDataCode: ItemDataCode, player, amount) -> list[DomeKeeper
 def generate_items(itemDataCodes: list[ItemDataCode], player) -> list[DomeKeeperItem]:
     values = []
     for itemDataCode in itemDataCodes:
-        #print("Item data count of " + itemDataCode.data.name + " : " + str(itemDataCode.data.count))
         for _ in range(itemDataCode.data.count):
             values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
     return values
 
 def generate_progression_items(player: int, mapSize: int):
     values: list[DomeKeeperItem] = []
-    layers = getLayersAmountBasedOnMapSize(mapSize)
+    layers = getGetProgressionLayersAmount(mapSize)
     for i in range(layers):
-        if i == 0:
-            continue
         values.append(DomeKeeperItem(item_layer_unlock.code, item_layer_unlock.data.name, item_layer_unlock.data.classification, player))
     return values
 
@@ -212,6 +207,9 @@ def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
         result[i] += 1
 
     return result
+
+def getGetProgressionLayersAmount(mapSize: int) -> int:
+    return getLayersAmountBasedOnMapSize(mapSize) - 1 
 
 def getLayersAmountBasedOnMapSize(mapSize: int) -> int:
     # Small is 0 : 3 layers

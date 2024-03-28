@@ -1,17 +1,19 @@
 from typing import Dict, NamedTuple, Optional
 
-
 class DomeKeeperLocationData(NamedTuple):
     name: str
     code: Optional[int] = None
 
-UPGRADES_AMOUNT = 12
-
-SWITCHES_FIRST_ID = 4243101
-SWITCHES_MAX_AMOUNT = 61
+# Keeper, dome, gadget, progression layers, extra cobalt
+MAX_ITEMS_POSSIBLE = 43 + 20 + 14 + 6 + 10
 
 CAVE_FIRST_ID = 4243020
 CAVES_MAX_AMOUNT = 7
+
+UPGRADES_LOCATIONS_AMOUNT = 12
+
+SWITCHES_FIRST_ID = 4243101
+SWITCHES_MAX_AMOUNT = MAX_ITEMS_POSSIBLE - UPGRADES_LOCATIONS_AMOUNT - CAVES_MAX_AMOUNT
 
 location_table_easy_upgrades : Dict[str, DomeKeeperLocationData] = {
     "Upgrade Iron 1":  DomeKeeperLocationData("Upgrade unlock",     4243001),
