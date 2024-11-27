@@ -25,6 +25,7 @@ dome_keeper_index_tesla = dome_keeper_index + 50
 dome_keeper_index_repellent = dome_keeper_index + 60
 dome_keeper_index_shield = dome_keeper_index + 70
 dome_keeper_index_orchard = dome_keeper_index + 80
+dome_keeper_index_droneyard = dome_keeper_index + 85
 dome_keeper_index_cobalt = dome_keeper_index + 90
 dome_keeper_index_trap = dome_keeper_index + 91
 dome_keeper_index_layers = dome_keeper_index + 100
@@ -33,7 +34,7 @@ item_filler_cobalt: ItemDataCode = ItemDataCode(dome_keeper_index_cobalt, ItemDa
 item_trap_wavestart: ItemDataCode = ItemDataCode(dome_keeper_index_trap, ItemData("Wave start", classification=IC.trap))
 
 # 18 maximum + 
-item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", classification=IC.progression))
+item_engineer_drill  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 0, ItemData("Drill upgrade", classification=IC.progression)) # 10
 item_engineer_jetpack: ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 1, ItemData("Jetpack upgrade", 4))
 item_engineer_carry  : ItemDataCode = ItemDataCode(dome_keeper_index_engineer + 2, ItemData("Carry upgrade", 4))
 
@@ -41,10 +42,10 @@ items_engineer = [item_engineer_jetpack, item_engineer_carry]
 
 # 43 maximum
 item_assessor_movement          : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 0, ItemData("Gravitational movement", 4))
-item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", classification=IC.progression))
+item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 1, ItemData("Kinetic spheres", classification=IC.progression)) # 10
 item_assessor_bundles           : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 2, ItemData("Bundles upgrade", 4))
 item_assessor_spheres_supply    : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 3, ItemData("Sphere supply upgrade", 6))
-item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade"))
+item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 4, ItemData("Sphere lifetime upgrade")) # 25
 # one of the three upgrade and it's better upgrade
 item_assessor_spheres_special   : ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 5, ItemData("Sphere special upgrade", 2))
 item_assessor_compression_mining: ItemDataCode = ItemDataCode(dome_keeper_index_assessor + 6, ItemData("Compression mining upgrade", 2))
@@ -116,11 +117,19 @@ item_orchard_mining_boost: ItemDataCode = ItemDataCode(dome_keeper_index_orchard
 
 items_orchard = [item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost]
 
+# 21
+item_droneyard_drones    : ItemDataCode = ItemDataCode(dome_keeper_index_droneyard + 0, ItemData("Droneyard drones amount")) # 10 max
+item_droneyard_speed     : ItemDataCode = ItemDataCode(dome_keeper_index_droneyard + 1, ItemData("Droneyard drone speed", 5))
+item_droneyard_special   : ItemDataCode = ItemDataCode(dome_keeper_index_droneyard + 2, ItemData("Droneyard special", 3))
+item_droneyard_overcharge: ItemDataCode = ItemDataCode(dome_keeper_index_droneyard + 3, ItemData("Droneyard overcharge", 3))
+
+items_droneyard = [item_droneyard_speed, item_droneyard_special, item_droneyard_overcharge]
+
 item_layer_unlock  : ItemDataCode = ItemDataCode(dome_keeper_index_layers + 0, ItemData("Layer unlock", 6, classification=IC.progression))
 
 def generate_all_items() -> Dict[int, ItemData]:
     rtr: Dict[int, ItemData] = {}
-    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard:
+    for idc in items_engineer + items_assessor + items_laser + items_sword + items_artillery + items_tesla + items_shield + items_repellent + items_orchard + items_droneyard:
         rtr[idc.code] = idc.data
     rtr[item_layer_unlock.code] = item_layer_unlock.data    
     rtr[item_filler_cobalt.code] = item_filler_cobalt.data
@@ -128,4 +137,5 @@ def generate_all_items() -> Dict[int, ItemData]:
     rtr[item_engineer_drill.code] = item_engineer_drill.data
     rtr[item_assessor_spheres_strength.code] = item_assessor_spheres_strength.data
     rtr[item_assessor_spheres_lifetime.code] = item_assessor_spheres_lifetime.data
+    rtr[item_droneyard_drones.code] = item_droneyard_drones.data
     return rtr

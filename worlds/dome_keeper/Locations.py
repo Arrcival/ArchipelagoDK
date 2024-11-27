@@ -8,50 +8,60 @@ class DomeKeeperLocationData(NamedTuple):
 MAX_ITEMS_POSSIBLE = 43 + 20 + 14 + 6 + 10
 
 CAVE_FIRST_ID = 4243020
-CAVES_MAX_AMOUNT = 7
+LAYERS_MAX_AMOUNT = 7
 
 UPGRADES_LOCATIONS_AMOUNT = 12
 
 SWITCHES_FIRST_ID = 4243101
-SWITCHES_MAX_AMOUNT = MAX_ITEMS_POSSIBLE - UPGRADES_LOCATIONS_AMOUNT - CAVES_MAX_AMOUNT
 
-location_table_easy_upgrades : Dict[str, DomeKeeperLocationData] = {
-    "Upgrade Iron 1":  DomeKeeperLocationData("Upgrade unlock",     4243001),
-    "Upgrade Iron 2":  DomeKeeperLocationData("Upgrade unlock",     4243002),
-    "Upgrade Water 1":  DomeKeeperLocationData("Upgrade unlock",    4243005),
-    "Upgrade Water 2":  DomeKeeperLocationData("Upgrade unlock",    4243006),
-    "Upgrade Iron and Water 1":  DomeKeeperLocationData("Upgrade unlock",   4243009),
-    "Upgrade Iron and Water 2":  DomeKeeperLocationData("Upgrade unlock",   4243010),
-}
+LAYER_OFFSET = 30
 
-location_table_normal_upgrades : Dict[str, DomeKeeperLocationData] = {
-    "Upgrade Iron 3":  DomeKeeperLocationData("Upgrade unlock",     4243003),
-    "Upgrade Water 3":  DomeKeeperLocationData("Upgrade unlock",    4243007),
-    "Upgrade Iron and Water 3":  DomeKeeperLocationData("Upgrade unlock",   4243011),
-}
+location_table_easy_upgrades : list[DomeKeeperLocationData] = [
+    DomeKeeperLocationData("Upgrade Iron 1",             4243001),
+    DomeKeeperLocationData("Upgrade Iron 2",             4243002),
+    DomeKeeperLocationData("Upgrade Water 1",            4243005),
+    DomeKeeperLocationData("Upgrade Water 2",            4243006),
+    DomeKeeperLocationData("Upgrade Iron and Water 1",   4243009),
+    DomeKeeperLocationData("Upgrade Iron and Water 2",   4243010),
+]
 
-location_table_hard_upgrades : Dict[str, DomeKeeperLocationData] = {
-    "Upgrade Iron 4":  DomeKeeperLocationData("Upgrade unlock",     4243004),
-    "Upgrade Water 4":  DomeKeeperLocationData("Upgrade unlock",    4243008),
-    "Upgrade Iron and Water 4":  DomeKeeperLocationData("Upgrade unlock",   4243012),
-}
+location_table_normal_upgrades : list[DomeKeeperLocationData] = [
+    DomeKeeperLocationData("Upgrade Iron 3",             4243003),
+    DomeKeeperLocationData("Upgrade Water 3",            4243007),
+    DomeKeeperLocationData("Upgrade Iron and Water 3",   4243011),
+]
 
-location_table_upgrades: Dict[str, DomeKeeperLocationData] = location_table_easy_upgrades | location_table_normal_upgrades | location_table_hard_upgrades
+location_table_hard_upgrades : list[DomeKeeperLocationData] = [
+    DomeKeeperLocationData("Upgrade Iron 4",             4243004),
+    DomeKeeperLocationData("Upgrade Water 4",            4243008),
+    DomeKeeperLocationData("Upgrade Iron and Water 4",   4243012),
+]
 
-def generate_locations_data() -> Dict[str, DomeKeeperLocationData] :
-    rtr: Dict[str, DomeKeeperLocationData] = location_table_upgrades.copy()
-    rtr = rtr | generate_switches_location()
-    rtr = rtr | generate_caves_location()
+def generate_locations_data() -> list[DomeKeeperLocationData] :
+    rtr: list[DomeKeeperLocationData] = []
+    rtr.extend(location_table_easy_upgrades.copy())
+    rtr.extend(location_table_normal_upgrades.copy())
+    rtr.extend(location_table_hard_upgrades.copy())
+    rtr.extend(generate_switches_locations())
+    rtr.extend(generate_caves_locations())
     return rtr
 
-def generate_switches_location() -> Dict[str, DomeKeeperLocationData] :
-    rtr = {}
-    for i in range(SWITCHES_MAX_AMOUNT):
-        rtr["Switch " + str(i + 1)] = DomeKeeperLocationData("Switch " + str(i + 1), SWITCHES_FIRST_ID + i)
+def generate_switches_locations() -> list[DomeKeeperLocationData]:
+    rtr = []
+    for i in range(LAYERS_MAX_AMOUNT):
+        layer_switches: list[DomeKeeperLocationData] = generate_switches_location_for_layer(i)
+        rtr.extend(layer_switches)
     return rtr
 
-def generate_caves_location() -> Dict[str, DomeKeeperLocationData] :
-    rtr = {}
-    for i in range(CAVES_MAX_AMOUNT):
-        rtr["Cave " + str(i + 1)] = DomeKeeperLocationData("Cave " + str(i + 1), CAVE_FIRST_ID + i)
+
+def generate_switches_location_for_layer(layer: int) -> list[DomeKeeperLocationData]:
+    rtr = []
+    for i in range(LAYER_OFFSET):
+        rtr.append(DomeKeeperLocationData("Layer " + str(layer + 1) + " - Switch " + str(i + 1), SWITCHES_FIRST_ID + (LAYER_OFFSET * layer) + i))
+    return rtr
+
+def generate_caves_locations() -> list[DomeKeeperLocationData] :
+    rtr = []
+    for i in range(LAYERS_MAX_AMOUNT):
+        rtr.append(DomeKeeperLocationData("Layer " + str(i + 1) + " - Cave", CAVE_FIRST_ID + i))
     return rtr
