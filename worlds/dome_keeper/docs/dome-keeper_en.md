@@ -17,7 +17,8 @@ an experience customized for their taste, and different players in the same mult
 ### Where do I get a YAML file?
 
 you can customize your settings by visiting
-the [Dome Keeper Settings Page](/games/Dome%20Keeper/player-settings).
+the [Dome Keeper Settings Page](/games/Dome%20Keeper/player-options).
+[test](../player-options)
 
 ### Connect to the MultiServer
 

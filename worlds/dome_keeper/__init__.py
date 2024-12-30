@@ -2,37 +2,37 @@ import math
 import string
 from BaseClasses import Item, ItemClassification, Tutorial
 from worlds.AutoWorld import WebWorld, World
-from worlds.dome_keeper.Rules import set_rules_colored_layers
+from worlds.dome_keeper.Rules import get_unlocks_without_starting, set_every_rules
 from .Items import (
-    ItemDataCode,
-    generate_all_items,
-    items_engineer,
-    items_assessor,
-    items_laser,
-    items_sword,
-    items_artillery,
-    items_tesla,
-    items_shield,
-    items_orchard,
-    items_repellent,
-    item_trap_wavestart,
-    item_filler_cobalt,
-    item_layer_unlock,
-    item_engineer_drill,
-    item_assessor_spheres_strength,
-    item_assessor_spheres_lifetime,
-    items_droneyard,
-    item_droneyard_drones
+    all_items,
+    generate_engineer_upgrades,
+    generate_assessor_upgrades,
+    generate_item,
+    generate_laser_upgrades,
+    generate_sword_upgrades,
+    generate_artillery_upgrades,
+    generate_tesla_upgrades,
+    generate_repellent_upgrades,
+    generate_shield_upgrades,
+    generate_orchard_upgrades,
+    generate_droneyard_upgrades,
+    generate_layers_upgrades,
+    generate_cobalt_upgrades,
+    generate_iron_rewards,
+    generate_water_rewards,
+    generate_cobalt_rewards,
+    item_filler_cobalt
 )
-from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget
+from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget, ProgressionType
 from .Option_Groups import dk_option_groups
 from .Locations import UPGRADES_LOCATIONS_AMOUNT, generate_locations_data
 from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.0.0"
+AP_VERSION = "1.1.0"
 
+TOTAL_RESSOURCES_GA = 17
 
 class DomeKeeperItem(Item):
     game = "Dome Keeper"
@@ -45,19 +45,19 @@ class DomeKeeperItem(Item):
             player
         )
 
-
 class DomeKeeperWeb(WebWorld):
     options_presets = dk_options_presets
     option_groups = dk_option_groups
-    tutorials = [Tutorial(
+    setup_en = Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up Dome Keeper for Archipelago."
-        "",
+        "A guide to setting up Dome Keeper for Archipelago.",
         "English",
         "dome_keeper_en.md",
         "dome_keeper/en",
         ["Arrcival"]
-    )]
+    )
+
+    tutorials = [setup_en]
 
 class DomeKeeperWorld(World):
     """Dome Keeper is a roguelike/mining game where you need to dig up a relic while defending waves of enemies."""
@@ -65,23 +65,34 @@ class DomeKeeperWorld(World):
     game = "Dome Keeper"  # name of the game/world
     options_dataclass = DomeKeeperOptions
     options: DomeKeeperOptions
-    item_name_to_id = {data.name: id for id, data in generate_all_items().items()}
+    item_name_to_id = {itemDataCode.name: itemDataCode.code for itemDataCode in all_items}
     location_name_to_id = {location.name: location.code for location in generate_locations_data()}
     topology_present = True
     web = DomeKeeperWeb()
     required_client_version = (0, 5, 1)
 
-    base_id = 4242001
+    base_id = 4242000
 
     pool: list[Item] = []
     itempoolcount = 0
     switchesPerLayer: list[int] = []
     goalItems: list[str] = []
+
+    ga_final_assignment: int
         
     def set_rules(self):
-        set_rules_colored_layers(self, self.player)
+        set_every_rules(self, self.player)
 
     def generate_early(self):
+        if self.options.progression_type == ProgressionType.option_Guild_Assignments:
+            self.itempoolcount += 32
+
+            unlocks: list[Item] = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
+            self.goalItems += [item.name for item in unlocks]
+
+            self.ga_final_assignment = self.random.randint(0, 14)
+            return
+
         if self.options.keeper == Keeper.option_Engineer:
             self.itempoolcount += 8
             self.itempoolcount += self.options.drill_upgrades.value
@@ -112,8 +123,9 @@ class DomeKeeperWorld(World):
         self.itempoolcount += self.options.extra_cobalt.value
 
         # progression items to unlock layers
-        if self.options.colored_layers.value:
-            goalItems = [item.name for item in generate_progression_items(self.player, self.options.map_size.value)]
+        if self.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
+            layers_unlock_amount = getProgressionLayersAmount(self.options.map_size.value)
+            goalItems = [item.name for item in generate_layers_upgrades(self.player, layers_unlock_amount)]
             self.itempoolcount += len(goalItems)
 
             self.goalItems += goalItems
@@ -121,47 +133,59 @@ class DomeKeeperWorld(World):
         layers_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
         # amount of items minus upgrades minus caves (which is the amount of layers)
         self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount, self.options.map_size.value)
-        
 
     def create_items(self):
         self.pool.clear()
+
+        # Async items
+        if self.options.progression_type == ProgressionType.option_Guild_Assignments:
+            unlocks = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
+            self.pool += unlocks
+
+            iron_amount = TOTAL_RESSOURCES_GA - self.options.starting_water.value - self.options.starting_cobalt.value
+            self.pool += generate_iron_rewards(self.player, iron_amount)
+            self.pool += generate_water_rewards(self.player, self.options.starting_water.value)
+            self.pool += generate_cobalt_rewards(self.player, self.options.starting_cobalt.value)
+            
+            self.multiworld.itempool += self.pool
+            return
+        
+        # Sync items
         if self.options.keeper == Keeper.option_Engineer:
-            self.pool += generate_items(items_engineer, self.player)
-            self.pool += generate_item(item_engineer_drill, self.player, self.options.drill_upgrades.value)
+            self.pool += generate_engineer_upgrades(self.player, self.options.drill_upgrades.value)
         if self.options.keeper == Keeper.option_Assessor:
-            self.pool += generate_items(items_assessor, self.player)
-            self.pool += generate_item(item_assessor_spheres_strength, self.player, self.options.kinetic_spheres.value)
-            self.pool += generate_item(item_assessor_spheres_lifetime, self.player, self.options.sphere_lifetime.value)
+            self.pool += generate_assessor_upgrades(self.player, self.options.kinetic_spheres.value, self.options.sphere_lifetime.value)
 
         if self.options.dome == Dome.option_Laser:
-            self.pool += generate_items(items_laser, self.player)
+            self.pool += generate_laser_upgrades(self.player)
         if self.options.dome == Dome.option_Sword:
-            self.pool += generate_items(items_sword, self.player)
+            self.pool += generate_sword_upgrades(self.player)
         if self.options.dome == Dome.option_Artillery:
-            self.pool += generate_items(items_artillery, self.player)
+            self.pool += generate_artillery_upgrades(self.player)
         if self.options.dome == Dome.option_Tesla:
-            self.pool += generate_items(items_tesla, self.player)
+            self.pool += generate_tesla_upgrades(self.player)
         
         if self.options.dome_gadget == DomeGadget.option_Orchard:
-            self.pool += generate_items(items_orchard, self.player)
+            self.pool += generate_orchard_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Repellent:
-            self.pool += generate_items(items_repellent, self.player)
+            self.pool += generate_repellent_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Shield:
-            self.pool += generate_items(items_shield, self.player)
+            self.pool += generate_shield_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Droneyard:
-            self.pool += generate_items(items_droneyard, self.player)
-            self.pool += generate_item(item_droneyard_drones, self.player, self.options.droneyard_drones.value)
+            self.pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
 
-        if self.options.colored_layers.value:
-            self.pool += generate_progression_items(self.player, self.options.map_size.value)
+        if self.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
+            layers_unlock_amount = getProgressionLayersAmount(self.options.map_size.value)
+            self.pool += generate_layers_upgrades(self.player, layers_unlock_amount)
 
-        self.pool += generate_junk_cobalts(self.player, self.options.extra_cobalt.value)
+        self.pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
 
         self.multiworld.itempool += self.pool
 
-
     def create_item(self, name: str) -> Item:
-        return DomeKeeperItem(name, self.player, ItemClassification.filler)
+        for item in all_items:
+            if item.name == name:
+                return generate_item(self.player, item)
         
     def create_regions(self):
         create_every_regions(self)
@@ -180,37 +204,14 @@ class DomeKeeperWorld(World):
             "kineticSpheres": self.options.kinetic_spheres.value,
             "sphereLifetime": self.options.sphere_lifetime.value,
             "dronesAmount": self.options.droneyard_drones.value,
-            "coloredLayersProgression": self.options.colored_layers.value,
-            "miningEverything": self.options.mining_everything.value
+            "progressionType": self.options.progression_type.value,
+            "miningEverything": self.options.mining_everything.value,
+            "startingGA": self.options.first_assignment.value,
+            "challengeMode": self.options.challenge_mode.value
         }
 
-def generate_item(itemDataCode: ItemDataCode, player, amount) -> list[DomeKeeperItem]:
-    values = []
-    for _ in range(amount):
-        values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
-    return values
-
-
-def generate_items(itemDataCodes: list[ItemDataCode], player) -> list[DomeKeeperItem]:
-    values = []
-    for itemDataCode in itemDataCodes:
-        for _ in range(itemDataCode.data.count):
-            values.append(DomeKeeperItem(itemDataCode.code, itemDataCode.data.name, itemDataCode.data.classification, player))
-    return values
-
-def generate_progression_items(player: int, mapSize: int):
-    values: list[DomeKeeperItem] = []
-    layers = getProgressionLayersAmount(mapSize)
-    for _ in range(layers):
-        values.append(DomeKeeperItem(item_layer_unlock.code, item_layer_unlock.data.name, item_layer_unlock.data.classification, player))
-    return values
-
-def generate_junk_cobalts(player, amount):
-    # edit later for traps
-    values = []
-    for _ in range(amount):
-        values.append(DomeKeeperItem(item_filler_cobalt.code, item_filler_cobalt.data.name, item_filler_cobalt.data.classification, player))
-    return values
+    def get_filler_item_name(self) -> str:
+        return item_filler_cobalt.data.name
 
 def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
     # Small : 3, medium : 4, large : 6, huge: 7

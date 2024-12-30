@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from Options import PerGameCommonOptions, Choice, DeathLink, Range, Toggle
+from Options import PerGameCommonOptions, Choice, DeathLink, Range, StartInventoryPool, Toggle
 
 
 class Keeper(Choice):
@@ -93,16 +93,62 @@ class ExtraCobaltFiller(Range):
     default = 0
     display_name = "Extra cobalt items"
 
-class ColoredLayersProgression(Toggle):
-    """Locks color layers with an item for progression."""
-    internal_name = "colored_layers"
-    display_name = "Colored layers progression"
-    default = True
+class ProgressionType(Choice):
+    """The type of progression you want to play with."""
+    internal_name = "progression_type"
+    display_name = "Progression type"
+    option_Relic_Hunt_No_Progression = 0
+    option_Relic_Hunt_Progression_Layers = 1
+    option_Guild_Assignments = 2
+    default = 1
 
 class MiningEverythingVictory(Toggle):
     """You can only claim victory if you mined every single tile of the map"""
     internal_name = "mining_everything"
     display_name = "Mining everything goal"
+
+class MustBeChallengeMode(Toggle):
+    """Progression locations are flagged as progression in challenge mode instead of regular."""
+    internal_name = "challenge_mode"
+    display_name = "Challenge mode"
+
+class StartingWaterItems(Range):
+    """How many iron rewards are replaced with starting water."""
+    internal_name = "starting_water"
+    range_start = 0
+    range_end = 8
+    default = 5
+    display_name = "Water rewards"
+
+class StartingCobaltItems(Range):
+    """How many iron rewards are replaced with starting cobalt."""
+    internal_name = "starting_cobalt"
+    range_start = 0
+    range_end = 8
+    default = 3
+    display_name = "Cobalt rewards"
+
+class StartingAssignment(Choice):
+    """The first assignment you want to start with."""
+    internal_name = "first_assignment"
+    display_name = "First assignment"
+    option_Showdown = 0
+    option_Iron_contribution = 1
+    option_Upside_down = 2
+    option_Maze = 3
+    option_Projectile_hell = 4
+    option_Dense_iron = 5
+    option_Barren_lands = 6
+    option_Defective_weapon = 7
+    option_Heavy_hitters = 8
+    option_Swiss_cheese = 9
+    option_Logistical_problem = 10
+    option_High_risk = 11
+    option_Monster_masses = 12
+    option_Iron_shortage = 13
+    option_Mining_problem = 14
+    option_Cobalt_contribution = 15
+    default = "random"
 
 @dataclass
 class DomeKeeperOptions(PerGameCommonOptions):
@@ -114,8 +160,14 @@ class DomeKeeperOptions(PerGameCommonOptions):
     death_link: DeathLink
     drill_upgrades: DrillUpgradesAmount
     kinetic_spheres: KineticSpheresUpgradesAmount
-    colored_layers: ColoredLayersProgression
     sphere_lifetime: SphereLifetimeUpgradesAmount
     droneyard_drones: DroneyardDronesAmount
     extra_cobalt: ExtraCobaltFiller
     mining_everything: MiningEverythingVictory
+    progression_type: ProgressionType
+    challenge_mode: MustBeChallengeMode
+    starting_water: StartingWaterItems
+    starting_cobalt: StartingCobaltItems
+    first_assignment: StartingAssignment
+    death_link: DeathLink
+    start_inventory_from_pool: StartInventoryPool
