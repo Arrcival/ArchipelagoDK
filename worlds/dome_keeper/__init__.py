@@ -206,6 +206,7 @@ class DomeKeeperWorld(World):
             "dronesAmount": self.options.droneyard_drones.value,
             "progressionType": self.options.progression_type.value,
             "miningEverything": self.options.mining_everything.value,
+            "assignmentsAmount": self.options.assignment_amount.value,
             "startingGA": self.options.first_assignment.value,
             "challengeMode": self.options.challenge_mode.value
         }

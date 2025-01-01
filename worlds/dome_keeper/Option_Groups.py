@@ -1,7 +1,7 @@
 from typing import List
 
 from Options import DeathLink, ProgressionBalancing, Accessibility, OptionGroup
-from .Options import (Dome, Keeper, DomeGadget, MapSize, Difficulty, DrillUpgradesAmount, ProgressionType,
+from .Options import (AssignmentCompletionGoal, Dome, Keeper, DomeGadget, MapSize, Difficulty, DrillUpgradesAmount, ProgressionType,
                       KineticSpheresUpgradesAmount, SphereLifetimeUpgradesAmount, DroneyardDronesAmount, ExtraCobaltFiller, MiningEverythingVictory,
                       MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, StartingAssignment)
 
@@ -32,5 +32,6 @@ dk_option_groups: List[OptionGroup] = [
         StartingWaterItems,
         StartingCobaltItems,
         StartingAssignment,
+        AssignmentCompletionGoal
     ]),
 ]

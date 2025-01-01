@@ -112,6 +112,14 @@ class MustBeChallengeMode(Toggle):
     internal_name = "challenge_mode"
     display_name = "Challenge mode"
 
+class AssignmentCompletionGoal(Range):
+    """How many guild assignments you have to clear to clear the world."""
+    internal_name = "assignment_amount"
+    display_name = "Assignment completion amount"
+    range_start = 1
+    range_end = 16
+    default = 16
+
 class StartingWaterItems(Range):
     """How many iron rewards are replaced with starting water."""
     internal_name = "starting_water"
@@ -169,5 +177,6 @@ class DomeKeeperOptions(PerGameCommonOptions):
     starting_water: StartingWaterItems
     starting_cobalt: StartingCobaltItems
     first_assignment: StartingAssignment
+    assignment_amount: AssignmentCompletionGoal
     death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
