@@ -1,6 +1,6 @@
 import math
 import string
-from BaseClasses import Item, ItemClassification, Tutorial
+from BaseClasses import Item, ItemClassification, MultiWorld, Tutorial
 from worlds.AutoWorld import WebWorld, World
 from worlds.dome_keeper.Rules import get_unlocks_without_starting, set_every_rules
 from .Items import (
@@ -30,7 +30,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.1.0"
+AP_VERSION = "1.1.2"
 
 TOTAL_RESSOURCES_GA = 17
 
@@ -73,19 +73,23 @@ class DomeKeeperWorld(World):
 
     base_id = 4242000
 
-    pool: list[Item] = []
-    itempoolcount = 0
-    switchesPerLayer: list[int] = []
-    goalItems: list[str] = []
+    switchesPerLayer: list[int]
+    goalItems: list[str]
 
     ga_final_assignment: int
+
+    def __init__(self, multiworld: MultiWorld, player: int):
+        super().__init__(multiworld, player)
+        self.switchesPerLayer = []
+        self.goalItems = []
         
     def set_rules(self):
         set_every_rules(self, self.player)
 
     def generate_early(self):
+        itempoolcount = 0
         if self.options.progression_type == ProgressionType.option_Guild_Assignments:
-            self.itempoolcount += 32
+            itempoolcount += 32
 
             unlocks: list[Item] = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
             self.goalItems += [item.name for item in unlocks]
@@ -94,93 +98,93 @@ class DomeKeeperWorld(World):
             return
 
         if self.options.keeper == Keeper.option_Engineer:
-            self.itempoolcount += 8
-            self.itempoolcount += self.options.drill_upgrades.value
+            itempoolcount += 8
+            itempoolcount += self.options.drill_upgrades.value
         if self.options.keeper == Keeper.option_Assessor:
-            self.itempoolcount += 18
-            self.itempoolcount += self.options.kinetic_spheres.value
-            self.itempoolcount += self.options.sphere_lifetime.value
+            itempoolcount += 18
+            itempoolcount += self.options.kinetic_spheres.value
+            itempoolcount += self.options.sphere_lifetime.value
 
         if self.options.dome == Dome.option_Laser:
-            self.itempoolcount += 9
+            itempoolcount += 9
         if self.options.dome == Dome.option_Sword:
-            self.itempoolcount += 14
+            itempoolcount += 14
         if self.options.dome == Dome.option_Artillery:
-            self.itempoolcount += 10
+            itempoolcount += 10
         if self.options.dome == Dome.option_Tesla:
-            self.itempoolcount += 20
+            itempoolcount += 20
         
         if self.options.dome_gadget == DomeGadget.option_Repellent:
-            self.itempoolcount += 11
+            itempoolcount += 11
         if self.options.dome_gadget == DomeGadget.option_Shield:
-            self.itempoolcount += 9
+            itempoolcount += 9
         if self.options.dome_gadget == DomeGadget.option_Orchard:
-            self.itempoolcount += 14
+            itempoolcount += 14
         if self.options.dome_gadget == DomeGadget.option_Droneyard:
-            self.itempoolcount += 11
-            self.itempoolcount += self.options.droneyard_drones.value
+            itempoolcount += 11
+            itempoolcount += self.options.droneyard_drones.value
 
-        self.itempoolcount += self.options.extra_cobalt.value
+        itempoolcount += self.options.extra_cobalt.value
 
         # progression items to unlock layers
         if self.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
             layers_unlock_amount = getProgressionLayersAmount(self.options.map_size.value)
             goalItems = [item.name for item in generate_layers_upgrades(self.player, layers_unlock_amount)]
-            self.itempoolcount += len(goalItems)
+            itempoolcount += len(goalItems)
 
             self.goalItems += goalItems
         
         layers_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
         # amount of items minus upgrades minus caves (which is the amount of layers)
-        self.switchesPerLayer = generateSwitchesPerLayer(self.itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount, self.options.map_size.value)
+        self.switchesPerLayer = generateSwitchesPerLayer(itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount, self.options.map_size.value)
 
     def create_items(self):
-        self.pool.clear()
+        pool = []
 
         # Async items
         if self.options.progression_type == ProgressionType.option_Guild_Assignments:
             unlocks = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
-            self.pool += unlocks
+            pool += unlocks
 
             iron_amount = TOTAL_RESSOURCES_GA - self.options.starting_water.value - self.options.starting_cobalt.value
-            self.pool += generate_iron_rewards(self.player, iron_amount)
-            self.pool += generate_water_rewards(self.player, self.options.starting_water.value)
-            self.pool += generate_cobalt_rewards(self.player, self.options.starting_cobalt.value)
+            pool += generate_iron_rewards(self.player, iron_amount)
+            pool += generate_water_rewards(self.player, self.options.starting_water.value)
+            pool += generate_cobalt_rewards(self.player, self.options.starting_cobalt.value)
             
-            self.multiworld.itempool += self.pool
+            self.multiworld.itempool += pool
             return
         
         # Sync items
         if self.options.keeper == Keeper.option_Engineer:
-            self.pool += generate_engineer_upgrades(self.player, self.options.drill_upgrades.value)
+            pool += generate_engineer_upgrades(self.player, self.options.drill_upgrades.value)
         if self.options.keeper == Keeper.option_Assessor:
-            self.pool += generate_assessor_upgrades(self.player, self.options.kinetic_spheres.value, self.options.sphere_lifetime.value)
+            pool += generate_assessor_upgrades(self.player, self.options.kinetic_spheres.value, self.options.sphere_lifetime.value)
 
         if self.options.dome == Dome.option_Laser:
-            self.pool += generate_laser_upgrades(self.player)
+            pool += generate_laser_upgrades(self.player)
         if self.options.dome == Dome.option_Sword:
-            self.pool += generate_sword_upgrades(self.player)
+            pool += generate_sword_upgrades(self.player)
         if self.options.dome == Dome.option_Artillery:
-            self.pool += generate_artillery_upgrades(self.player)
+            pool += generate_artillery_upgrades(self.player)
         if self.options.dome == Dome.option_Tesla:
-            self.pool += generate_tesla_upgrades(self.player)
+            pool += generate_tesla_upgrades(self.player)
         
         if self.options.dome_gadget == DomeGadget.option_Orchard:
-            self.pool += generate_orchard_upgrades(self.player)
+            pool += generate_orchard_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Repellent:
-            self.pool += generate_repellent_upgrades(self.player)
+            pool += generate_repellent_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Shield:
-            self.pool += generate_shield_upgrades(self.player)
+            pool += generate_shield_upgrades(self.player)
         if self.options.dome_gadget == DomeGadget.option_Droneyard:
-            self.pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
+            pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
 
         if self.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
             layers_unlock_amount = getProgressionLayersAmount(self.options.map_size.value)
-            self.pool += generate_layers_upgrades(self.player, layers_unlock_amount)
+            pool += generate_layers_upgrades(self.player, layers_unlock_amount)
 
-        self.pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
+        pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
 
-        self.multiworld.itempool += self.pool
+        self.multiworld.itempool += pool
 
     def create_item(self, name: str) -> Item:
         for item in all_items:
