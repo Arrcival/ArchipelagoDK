@@ -151,6 +151,7 @@ all_items : list[ItemDataCode] = [
     item_repellent_delay, item_repellent_special, item_repellent_overcharge,
     item_shield_strength, item_shield_special, item_shield_overcharge,
     item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost,
+    item_droneyard_drones, item_droneyard_speed, item_droneyard_special, item_droneyard_overcharge,
     item_layer_unlock,
     item_filler_cobalt, item_trap_wavestart,
     item_assignment_unlock_showdown, item_assignment_unlock_iron_contribution, item_assignment_unlock_upside_down, item_assignment_unlock_maze,              
