@@ -30,7 +30,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.1.2"
+AP_VERSION = "1.1.3"
 
 TOTAL_RESSOURCES_GA = 17
 
