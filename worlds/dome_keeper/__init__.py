@@ -30,7 +30,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.1.3"
+AP_VERSION = "1.1.4"
 
 TOTAL_RESSOURCES_GA = 17
 
@@ -106,7 +106,7 @@ class DomeKeeperWorld(World):
             itempoolcount += self.options.sphere_lifetime.value
 
         if self.options.dome == Dome.option_Laser:
-            itempoolcount += 9
+            itempoolcount += 14
         if self.options.dome == Dome.option_Sword:
             itempoolcount += 14
         if self.options.dome == Dome.option_Artillery:
