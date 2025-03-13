@@ -17,11 +17,14 @@ from .Items import (
     generate_orchard_upgrades,
     generate_droneyard_upgrades,
     generate_layers_upgrades,
+    generate_iron_upgrades,
+    generate_traps,
+    generate_water_upgrades,
     generate_cobalt_upgrades,
     generate_iron_rewards,
     generate_water_rewards,
     generate_cobalt_rewards,
-    item_filler_cobalt
+    item_filler_iron
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget, ProgressionType
 from .Option_Groups import dk_option_groups
@@ -30,9 +33,9 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.1.4"
+AP_VERSION = "1.2.0"
 
-TOTAL_RESSOURCES_GA = 17
+TOTAL_RESSOURCES_GA = 49
 
 class DomeKeeperItem(Item):
     game = "Dome Keeper"
@@ -88,8 +91,10 @@ class DomeKeeperWorld(World):
 
     def generate_early(self):
         itempoolcount = 0
+
+
         if self.options.progression_type == ProgressionType.option_Guild_Assignments:
-            itempoolcount += 32
+            itempoolcount += 64
 
             unlocks: list[Item] = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
             self.goalItems += [item.name for item in unlocks]
@@ -97,6 +102,7 @@ class DomeKeeperWorld(World):
             self.ga_final_assignment = self.random.randint(0, 14)
             return
 
+        itempoolcount += self.options.trap_wave.value
         if self.options.keeper == Keeper.option_Engineer:
             itempoolcount += 8
             itempoolcount += self.options.drill_upgrades.value
@@ -106,7 +112,7 @@ class DomeKeeperWorld(World):
             itempoolcount += self.options.sphere_lifetime.value
 
         if self.options.dome == Dome.option_Laser:
-            itempoolcount += 14
+            itempoolcount += 10
         if self.options.dome == Dome.option_Sword:
             itempoolcount += 14
         if self.options.dome == Dome.option_Artillery:
@@ -125,6 +131,8 @@ class DomeKeeperWorld(World):
             itempoolcount += self.options.droneyard_drones.value
 
         itempoolcount += self.options.extra_cobalt.value
+        itempoolcount += self.options.extra_water.value
+        itempoolcount += self.options.extra_iron.value
 
         # progression items to unlock layers
         if self.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
@@ -135,18 +143,20 @@ class DomeKeeperWorld(World):
             self.goalItems += goalItems
         
         layers_amount = getLayersAmountBasedOnMapSize(self.options.map_size.value)
-        # amount of items minus upgrades minus caves (which is the amount of layers)
-        self.switchesPerLayer = generateSwitchesPerLayer(itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount, self.options.map_size.value)
+        # amount of items minus upgrades minus caves and charms (which is the amount of layers times 2)
+        self.switchesPerLayer = generateSwitchesPerLayer(itempoolcount - UPGRADES_LOCATIONS_AMOUNT - layers_amount * 2, self.options.map_size.value)
 
     def create_items(self):
         pool = []
 
+        pool += generate_traps(self.player, self.options.trap_wave.value)
+        
         # Async items
         if self.options.progression_type == ProgressionType.option_Guild_Assignments:
             unlocks = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
             pool += unlocks
 
-            iron_amount = TOTAL_RESSOURCES_GA - self.options.starting_water.value - self.options.starting_cobalt.value
+            iron_amount = TOTAL_RESSOURCES_GA - self.options.starting_water.value - self.options.starting_cobalt.value - self.options.trap_wave.value
             pool += generate_iron_rewards(self.player, iron_amount)
             pool += generate_water_rewards(self.player, self.options.starting_water.value)
             pool += generate_cobalt_rewards(self.player, self.options.starting_cobalt.value)
@@ -183,6 +193,8 @@ class DomeKeeperWorld(World):
             pool += generate_layers_upgrades(self.player, layers_unlock_amount)
 
         pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
+        pool += generate_water_upgrades(self.player, self.options.extra_water.value)
+        pool += generate_iron_upgrades(self.player, self.options.extra_iron.value)
 
         self.multiworld.itempool += pool
 
@@ -216,7 +228,7 @@ class DomeKeeperWorld(World):
         }
 
     def get_filler_item_name(self) -> str:
-        return item_filler_cobalt.data.name
+        return item_filler_iron.data.name
 
 def generateSwitchesPerLayer(switchesAmount: int, mapSize: int) -> list[int]:
     # Small : 3, medium : 4, large : 6, huge: 7

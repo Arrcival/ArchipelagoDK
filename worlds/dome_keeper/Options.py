@@ -93,6 +93,30 @@ class ExtraCobaltFiller(Range):
     default = 0
     display_name = "Extra cobalt items"
 
+class ExtraWaterFiller(Range):
+    """The amount of extra water added in the item pool as filler items."""
+    internal_name = "extra_water"
+    range_start = 0
+    range_end = 10
+    default = 0
+    display_name = "Extra water items"
+
+class ExtraIronFiller(Range):
+    """The amount of extra iron added in the item pool as filler items."""
+    internal_name = "extra_iron"
+    range_start = 0
+    range_end = 15
+    default = 3
+    display_name = "Extra iron items"
+
+class TrapWaveShortener(Range):
+    """The amount of trap items that shorten your current wave cooldown."""
+    internal_name = "trap_wave"
+    range_start = 0
+    range_end = 15
+    default = 0
+    display_name = "Trap wave shortener"
+
 class ProgressionType(Choice):
     """The type of progression you want to play with."""
     internal_name = "progression_type"
@@ -124,16 +148,16 @@ class StartingWaterItems(Range):
     """How many iron rewards are replaced with starting water."""
     internal_name = "starting_water"
     range_start = 0
-    range_end = 8
-    default = 5
+    range_end = 10
+    default = 7
     display_name = "Water rewards"
 
 class StartingCobaltItems(Range):
     """How many iron rewards are replaced with starting cobalt."""
     internal_name = "starting_cobalt"
     range_start = 0
-    range_end = 8
-    default = 3
+    range_end = 10
+    default = 5
     display_name = "Cobalt rewards"
 
 class StartingAssignment(Choice):
@@ -171,6 +195,9 @@ class DomeKeeperOptions(PerGameCommonOptions):
     sphere_lifetime: SphereLifetimeUpgradesAmount
     droneyard_drones: DroneyardDronesAmount
     extra_cobalt: ExtraCobaltFiller
+    extra_water: ExtraWaterFiller
+    extra_iron: ExtraIronFiller
+    trap_wave: TrapWaveShortener
     mining_everything: MiningEverythingVictory
     progression_type: ProgressionType
     challenge_mode: MustBeChallengeMode

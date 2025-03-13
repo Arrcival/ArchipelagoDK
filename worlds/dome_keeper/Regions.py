@@ -3,15 +3,17 @@ from BaseClasses import Location, LocationProgressType, Region
 from worlds.dome_keeper.Options import ProgressionType
 from .Locations import (
     DomeKeeperLocationData,
-    generate_caves_locations, 
+    generate_caves_locations,
+    generate_charms_locations, 
     generate_switches_location_for_layer, 
     location_table_easy_upgrades, 
     location_table_hard_upgrades,
     location_table_normal_upgrades,
     location_assignments_challenge,
-    location_assignments_regular
+    location_assignments_regular,
+    location_assignments_first_charm,
+    location_assignments_second_charm
 )
-from .Items import generate_item, item_assignments
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld
@@ -90,12 +92,15 @@ def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
 
         region.locations.append(map_location(progression_locations[i], world, region, LocationProgressType.DEFAULT))
         region.locations.append(map_location(non_progression_locations[i], world, region, LocationProgressType.EXCLUDED))
+        region.locations.append(map_location(location_assignments_first_charm[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(location_assignments_second_charm[i], world, region, LocationProgressType.DEFAULT))
 
         menu_region.connect(region)
         world.multiworld.regions.append(region)
 
 def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
     caves_location: list[DomeKeeperLocationData] = generate_caves_locations()
+    charms_location: list[DomeKeeperLocationData] = generate_charms_locations()
     switchesPerLayer = world.switchesPerLayer
 
     layerNumber = 1
@@ -111,10 +116,13 @@ def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
         region.locations.extend(map_locations(switches_locations_cropped, world, region, LocationProgressType.DEFAULT))
 
         current_cave: DomeKeeperLocationData = caves_location.pop(0)
+        current_charm: DomeKeeperLocationData = charms_location.pop(0)
 
         cave_location: DomeKeeperLocation = map_location(current_cave, world, region)
-        cave_location.progress_type = LocationProgressType.PRIORITY
         region.locations.append(cave_location)
+
+        charm_location: DomeKeeperLocation = map_location(current_charm, world, region)
+        region.locations.append(charm_location)
 
         if layerNumber == 1:
             region.locations.extend(map_locations(location_table_easy_upgrades, world, region, LocationProgressType.DEFAULT))

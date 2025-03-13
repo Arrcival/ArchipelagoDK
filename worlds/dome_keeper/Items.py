@@ -23,14 +23,17 @@ DOME_KEEPER_ITEM_INDEX_SHIELD = DOME_KEEPER_ITEM_INDEX + 70
 DOME_KEEPER_ITEM_INDEX_ORCHARD = DOME_KEEPER_ITEM_INDEX + 80
 DOME_KEEPER_ITEM_INDEX_DRONEYARD = DOME_KEEPER_ITEM_INDEX + 85
 DOME_KEEPER_ITEM_INDEX_COBALT = DOME_KEEPER_ITEM_INDEX + 90
-DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 91
+DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 95
 DOME_KEEPER_ITEM_INDEX_LAYERS = DOME_KEEPER_ITEM_INDEX + 100
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
 
+item_trap_wave_shortened: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave shortened", IC.trap)
+
 #region Sync items
 item_filler_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT, "Extra cobalt", IC.filler)
-item_trap_wavestart: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave start", IC.filler)
+item_filler_water: ItemDataCode =  ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT + 1, "Extra water", IC.filler)
+item_filler_iron: ItemDataCode =   ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT + 2, "Extra iron", IC.filler)
 
 # 18 maximum + 
 item_engineer_drill  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ENGINEER + 0, "Drill upgrade", classification=IC.progression) # 10
@@ -153,7 +156,7 @@ all_items : list[ItemDataCode] = [
     item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost,
     item_droneyard_drones, item_droneyard_speed, item_droneyard_special, item_droneyard_overcharge,
     item_layer_unlock,
-    item_filler_cobalt, item_trap_wavestart,
+    item_filler_cobalt, item_filler_water, item_filler_iron, item_trap_wave_shortened,
     item_assignment_unlock_showdown, item_assignment_unlock_iron_contribution, item_assignment_unlock_upside_down, item_assignment_unlock_maze,              
     item_assignment_unlock_projectile_hell, item_assignment_unlock_dense_iron, item_assignment_unlock_barren_lands, item_assignment_unlock_defective_weapon,
     item_assignment_unlock_heavy_hitters, item_assignment_unlock_swiss_cheese, item_assignment_unlock_logistical_problem, item_assignment_unlock_high_risk,
@@ -190,9 +193,9 @@ def generate_assessor_upgrades(player: int, spheres_strength: int, spheres_lifet
 
 def generate_laser_upgrades(player: int) -> list[Item]:
     rtr: list[Item] = []
-    rtr.extend(generate_items(player, item_laser_strength,              4))
+    rtr.extend(generate_items(player, item_laser_strength,              5))
     rtr.extend(generate_items(player, item_laser_speed,                 4))
-    rtr.extend(generate_items(player, item_laser_sight,                 6))
+    rtr.extend(generate_items(player, item_laser_sight,                 1))
     return rtr
 
 def generate_sword_upgrades(player: int) -> list[Item]:
@@ -257,6 +260,14 @@ def generate_cobalt_upgrades(player: int, cobalt_amount: int) -> list[Item]:
     rtr: list[Item] = generate_items(player, item_filler_cobalt, cobalt_amount)
     return rtr
 
+def generate_water_upgrades(player: int, water_amount: int) -> list[Item]:
+    rtr: list[Item] = generate_items(player, item_filler_water, water_amount)
+    return rtr
+
+def generate_iron_upgrades(player: int, iron_amount: int) -> list[Item]:
+    rtr: list[Item] = generate_items(player, item_filler_iron, iron_amount)
+    return rtr
+
 def generate_unlocks(player: int) -> list[Item]:
     rtr: list[Item] = []
     rtr.append(generate_item(player, item_assignment_unlock_showdown           ))
@@ -277,6 +288,9 @@ def generate_unlocks(player: int) -> list[Item]:
     rtr.append(generate_item(player, item_assignment_unlock_cobalt_contribution))
     return rtr
 
+def generate_traps(player: int, traps_amount: int) -> list[Item]:
+    return generate_items(player, item_trap_wave_shortened, traps_amount)
+
 def generate_iron_rewards(player: int, iron_amount: int) -> list[Item]:
     return generate_items(player, item_assignment_starting_iron, iron_amount)
 
@@ -285,33 +299,3 @@ def generate_water_rewards(player: int, water_amount: int) -> list[Item]:
 
 def generate_cobalt_rewards(player: int, cobalt_amount: int) -> list[Item]:
     return generate_items(player, item_assignment_starting_cobalt, cobalt_amount)
-
-def generate_all_upgrades(
-        player: int,
-        drill_upgrades: int,
-        spheres_strength: int,
-        spheres_lifetime: int,
-        drones_amount: int,
-        layers_amount: int,
-        cobalt_amount: int,
-        iron_rewards: int,
-        water_rewards: int,
-        cobalt_rewards: int) -> list[Item]:
-    rtr = []
-    rtr += generate_engineer_upgrades(player, drill_upgrades)
-    rtr += generate_assessor_upgrades(player, spheres_strength, spheres_lifetime)
-    rtr += generate_laser_upgrades(player)
-    rtr += generate_sword_upgrades(player)
-    rtr += generate_artillery_upgrades(player)
-    rtr += generate_tesla_upgrades(player)
-    rtr += generate_repellent_upgrades(player)
-    rtr += generate_shield_upgrades(player)
-    rtr += generate_orchard_upgrades(player)
-    rtr += generate_droneyard_upgrades(player, drones_amount)
-    rtr += generate_layers_upgrades(player, layers_amount)
-    rtr += generate_cobalt_upgrades(player, cobalt_amount)
-    rtr += generate_unlocks(player)
-    rtr += generate_iron_rewards(player, iron_rewards)
-    rtr += generate_water_rewards(player, water_rewards)
-    rtr += generate_cobalt_rewards(player, cobalt_rewards)
-    return rtr
