@@ -33,7 +33,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 
 
-AP_VERSION = "1.2.0"
+AP_VERSION = "1.3.0"
 
 TOTAL_RESSOURCES_GA = 49
 
@@ -72,7 +72,7 @@ class DomeKeeperWorld(World):
     location_name_to_id = {location.name: location.code for location in generate_locations_data()}
     topology_present = True
     web = DomeKeeperWeb()
-    required_client_version = (0, 5, 1)
+    required_client_version = (0, 6, 1)
 
     base_id = 4242000
 
