@@ -12,6 +12,7 @@ class ItemDataCode():
         self.name = name
         self.classification = classification
 
+#region indexes
 DOME_KEEPER_ITEM_INDEX_ENGINEER = DOME_KEEPER_ITEM_INDEX
 DOME_KEEPER_ITEM_INDEX_ASSESSOR = DOME_KEEPER_ITEM_INDEX + 10
 DOME_KEEPER_ITEM_INDEX_LASER = DOME_KEEPER_ITEM_INDEX + 20
@@ -25,22 +26,27 @@ DOME_KEEPER_ITEM_INDEX_DRONEYARD = DOME_KEEPER_ITEM_INDEX + 85
 DOME_KEEPER_ITEM_INDEX_COBALT = DOME_KEEPER_ITEM_INDEX + 90
 DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 95
 DOME_KEEPER_ITEM_INDEX_LAYERS = DOME_KEEPER_ITEM_INDEX + 100
+DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110
+DOME_KEEPER_ITEM_INDEX_BEAST = DOME_KEEPER_ITEM_INDEX + 120
+
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
 
 item_trap_wave_shortened: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave shortened", IC.trap)
 
 #region Sync items
+
+# fillers
 item_filler_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT, "Extra cobalt", IC.filler)
 item_filler_water: ItemDataCode =  ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT + 1, "Extra water", IC.filler)
 item_filler_iron: ItemDataCode =   ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT + 2, "Extra iron", IC.filler)
 
-# 18 maximum + 
+# engineer (18 maximum)
 item_engineer_drill  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ENGINEER + 0, "Drill upgrade", classification=IC.progression) # 10
 item_engineer_jetpack: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ENGINEER + 1, "Jetpack upgrade")
 item_engineer_carry  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ENGINEER + 2, "Carry upgrade")
 
-# 43 maximum
+# assessor (43 maximum)
 item_assessor_movement          : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 0, "Gravitational movement")
 item_assessor_spheres_strength  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 1, "Kinetic spheres", classification=IC.progression) # 10
 item_assessor_bundles           : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 2, "Bundles upgrade")
@@ -50,22 +56,26 @@ item_assessor_spheres_lifetime  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_I
 item_assessor_spheres_special   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 5, "Sphere special upgrade")
 item_assessor_compression_mining: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 6, "Compression mining upgrade")
 
-# 9
+# infiltrator
+item_infiltrator_hehe           : ItemDataCode
+
+
+# laser 9
 item_laser_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_LASER + 0, "Laser strength")
 item_laser_speed   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_LASER + 1, "Laser speed")
 item_laser_sight   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_LASER + 2, "Laser sight")
 
-# 14
+# sword 14
 item_sword_strength  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SWORD + 0, "Sword strength")
 item_sword_aimline   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SWORD + 1, "Sword aim line")
 item_sword_stab      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SWORD + 2, "Sword better stab")
 item_sword_reflection: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SWORD + 3, "Sword reflection")
 
-# 10
+# artillery 10
 item_artillery_mortar: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ARTILLERY + 0, "Artillery mortar")
 item_artillery_airgun: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ARTILLERY + 1, "Artillery air gun")
 
-# 20
+# tesla 20
 item_tesla_reticle_speed: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TESLA + 0, "Tesla reticle speed")
 item_tesla_quick_shot   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TESLA + 1, "Tesla quick shot")
 item_tesla_shot_power   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TESLA + 2, "Tesla shot power")
@@ -139,7 +149,6 @@ item_assignments = [
     item_assignment_unlock_mining_problem, 
     item_assignment_unlock_cobalt_contribution
 ]
-
 
 #endregion
 
