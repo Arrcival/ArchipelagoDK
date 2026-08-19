@@ -3,7 +3,7 @@ from typing import List
 from Options import DeathLink, ProgressionBalancing, Accessibility, OptionGroup
 from .Options import (AssignmentCompletionGoal, Dome, ExtraIronFiller, ExtraWaterFiller, Keeper, DomeGadget, MapSize, Difficulty, DrillUpgradesAmount, ProgressionType,
                       KineticSpheresUpgradesAmount, SphereLifetimeUpgradesAmount, DroneyardDronesAmount, ExtraCobaltFiller, MiningEverythingVictory,
-                      MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, StartingAssignment, TrapWaveShortener)
+                      MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, StartingAssignment, TrapWaveShortener, KunaiUpgradesAmount, CatgoblinsAmount, HaveDLC)
 
 dk_option_groups: List[OptionGroup] = [
     OptionGroup("General", [
@@ -11,7 +11,8 @@ dk_option_groups: List[OptionGroup] = [
         DeathLink,
         ProgressionBalancing,
         Accessibility,
-        TrapWaveShortener
+        TrapWaveShortener,
+        HaveDLC
     ]),
     OptionGroup("Relic hunt - General", [
         Dome,
@@ -26,6 +27,8 @@ dk_option_groups: List[OptionGroup] = [
         KineticSpheresUpgradesAmount,
         SphereLifetimeUpgradesAmount,
         DroneyardDronesAmount,
+        KunaiUpgradesAmount,
+        CatgoblinsAmount,
         ExtraCobaltFiller,
         ExtraWaterFiller,
         ExtraIronFiller

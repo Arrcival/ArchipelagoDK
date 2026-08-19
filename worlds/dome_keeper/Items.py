@@ -26,13 +26,14 @@ DOME_KEEPER_ITEM_INDEX_DRONEYARD = DOME_KEEPER_ITEM_INDEX + 85
 DOME_KEEPER_ITEM_INDEX_COBALT = DOME_KEEPER_ITEM_INDEX + 90
 DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 95
 DOME_KEEPER_ITEM_INDEX_LAYERS = DOME_KEEPER_ITEM_INDEX + 100
-DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110
-DOME_KEEPER_ITEM_INDEX_BEAST = DOME_KEEPER_ITEM_INDEX + 120
+DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110 # TO BE IMPLEMENTED
+DOME_KEEPER_ITEM_INDEX_BEASTMASTER = DOME_KEEPER_ITEM_INDEX + 120 # TO BE IMPLEMENTED
 
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
 
-item_trap_wave_shortened: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave shortened", IC.trap)
+item_trap_wave_shortened : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave shortened", IC.trap)
+item_trap_dome_damaged   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP + 1, "Dome damage", IC.trap)
 
 #region Sync items
 
@@ -57,8 +58,20 @@ item_assessor_spheres_special   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_I
 item_assessor_compression_mining: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSESSOR + 6, "Compression mining upgrade")
 
 # infiltrator
-item_infiltrator_hehe           : ItemDataCode
+item_infiltrator_carry_capacity          : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 0, "Kunai capacity upgrade") # 3
+item_infiltrator_progressive_aerial      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 1, "Jump upgrade") # 4
+item_infiltrator_progressive_mining      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 2, "Kunai upgrade", classification=IC.progression) # ?
+item_infiltrator_progressive_cooldown    : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 3, "Kunai cooldown upgrade") # 3
+item_infiltrator_progressive_assist      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 4, "Kunai assist upgrade") # 2
+item_infiltrator_progressive_shuriken    : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_INFILTRATOR + 5, "Shuriken upgrade") # 4
 
+# beastmaster
+item_beastmaster_speed             : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 0, "Move speed upgrade") # 3
+item_beastmaster_mining            : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 1, "Mining upgrade") # 3
+item_beastmaster_catgoblin_amount  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 2, "Catgoblin amount", classification=IC.progression) # 14 max
+item_beastmaster_catgoblin_mining  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 3, "Catgoblin mining upgrade") # 3
+item_beastmaster_squad_amount      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 4, "Catgoblin squad amount") # 3
+item_beastmaster_squad_mining      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 5, "Catgoblin squad mining upgrade") # 3
 
 # laser 9
 item_laser_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_LASER + 0, "Laser strength")
@@ -156,16 +169,25 @@ all_items : list[ItemDataCode] = [
     item_engineer_drill, item_engineer_jetpack,  item_engineer_carry,
     item_assessor_movement, item_assessor_bundles, item_assessor_spheres_supply, item_assessor_spheres_special, item_assessor_compression_mining,
     item_assessor_spheres_strength, item_assessor_spheres_lifetime,
+    item_infiltrator_carry_capacity, item_infiltrator_progressive_aerial, item_infiltrator_progressive_mining,
+    item_infiltrator_progressive_cooldown,item_infiltrator_progressive_assist, item_infiltrator_progressive_shuriken,
+    item_beastmaster_speed,  item_beastmaster_mining, item_beastmaster_catgoblin_amount,
+    item_beastmaster_catgoblin_mining, item_beastmaster_squad_amount, item_beastmaster_squad_mining,    
+
     item_laser_strength, item_laser_speed, item_laser_sight,
     item_sword_strength, item_sword_aimline, item_sword_stab, item_sword_reflection,
     item_artillery_mortar, item_artillery_airgun,
     item_tesla_reticle_speed, item_tesla_quick_shot, item_tesla_shot_power, item_tesla_auto_aim, item_tesla_better_orb,
+
     item_repellent_delay, item_repellent_special, item_repellent_overcharge,
     item_shield_strength, item_shield_special, item_shield_overcharge,
     item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost,
     item_droneyard_drones, item_droneyard_speed, item_droneyard_special, item_droneyard_overcharge,
+
     item_layer_unlock,
-    item_filler_cobalt, item_filler_water, item_filler_iron, item_trap_wave_shortened,
+    item_filler_cobalt, item_filler_water, item_filler_iron, 
+    item_trap_wave_shortened, item_trap_dome_damaged,
+
     item_assignment_unlock_showdown, item_assignment_unlock_iron_contribution, item_assignment_unlock_upside_down, item_assignment_unlock_maze,              
     item_assignment_unlock_projectile_hell, item_assignment_unlock_dense_iron, item_assignment_unlock_barren_lands, item_assignment_unlock_defective_weapon,
     item_assignment_unlock_heavy_hitters, item_assignment_unlock_swiss_cheese, item_assignment_unlock_logistical_problem, item_assignment_unlock_high_risk,
@@ -198,6 +220,26 @@ def generate_assessor_upgrades(player: int, spheres_strength: int, spheres_lifet
     rtr.extend(generate_items(player, item_assessor_compression_mining, 2))
     rtr.extend(generate_items(player, item_assessor_spheres_strength,   spheres_strength))
     rtr.extend(generate_items(player, item_assessor_spheres_lifetime,   spheres_lifetime))
+    return rtr
+
+def generate_infiltrator_upgrades(player: int, mining_upgrades: int) -> list[Item]:
+    rtr: list[Item] = []
+    rtr.extend(generate_items(player, item_infiltrator_carry_capacity      ,            3))
+    rtr.extend(generate_items(player, item_infiltrator_progressive_aerial  ,            4))
+    rtr.extend(generate_items(player, item_infiltrator_progressive_mining  ,            mining_upgrades))
+    rtr.extend(generate_items(player, item_infiltrator_progressive_cooldown,            3))
+    rtr.extend(generate_items(player, item_infiltrator_progressive_assist  ,            2))
+    rtr.extend(generate_items(player, item_infiltrator_progressive_shuriken,            4))
+    return rtr
+
+def generate_beastmaster_upgrades(player: int, goblins_amount: int) -> list[Item]:
+    rtr: list[Item] = []
+    rtr.extend(generate_items(player, item_beastmaster_speed           ,            3))
+    rtr.extend(generate_items(player, item_beastmaster_mining          ,            3))
+    rtr.extend(generate_items(player, item_beastmaster_catgoblin_amount,            goblins_amount))
+    rtr.extend(generate_items(player, item_beastmaster_catgoblin_mining,            3))
+    rtr.extend(generate_items(player, item_beastmaster_squad_amount    ,            3))
+    rtr.extend(generate_items(player, item_beastmaster_squad_mining    ,            3))
     return rtr
 
 def generate_laser_upgrades(player: int) -> list[Item]:

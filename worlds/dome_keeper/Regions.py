@@ -4,19 +4,22 @@ from worlds.dome_keeper.Options import ProgressionType
 from .Locations import (
     DomeKeeperLocationData,
     generate_caves_locations,
-    generate_charms_locations, 
+    generate_artifacts_locations, 
     generate_switches_location_for_layer, 
     location_table_easy_upgrades, 
     location_table_hard_upgrades,
     location_table_normal_upgrades,
     location_assignments_challenge,
     location_assignments_regular,
-    location_assignments_first_charm,
-    location_assignments_second_charm
+    location_assignments_first_artifact,
+    location_assignments_second_artifact,
+    get_layers_amount_from_map_size
 )
+from .Items import item_layer_unlock
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld
+
 
 GUILD_ASSIGNMENT_NAMES = [
     "Showdown",
@@ -37,11 +40,22 @@ GUILD_ASSIGNMENT_NAMES = [
     "Cobalt contribution"
 ]
 
+LAYER_PREFIX = "Layer"
+ENTRANCE_SUFFIX = " entrance"
+
+def layer_region_name(layer_number: int) -> str:
+    return f"{LAYER_PREFIX} {layer_number}"
+
+def layer_entrance_name(from_layer_number: int) -> str:
+    # entrance from layer N to layer N+1
+    return f"{layer_region_name(from_layer_number)}{ENTRANCE_SUFFIX}"
+
+def layer_artifact_location_name(layer_number: int) -> str:
+    return f"{layer_region_name(layer_number)} - Artifact"
 
 class DomeKeeperLocation(Location):
     game: str = "Dome Keeper"
 
-    
     def __init__(self, world: "DomeKeeperWorld", name: str, code: int, region: Region, progress_type: LocationProgressType= LocationProgressType.DEFAULT):
         self.player = world.player
         self.name = name
@@ -55,23 +69,40 @@ class DomeKeeperRegionData(NamedTuple):
     region_exits: Optional[List[str]]
 
 def create_every_regions(world: "DomeKeeperWorld"):
+    menu_region = Region("Menu", world.player, world.multiworld)
+    world.multiworld.regions.append(menu_region)
 
-    menuRegion = Region("Menu", world.player, world.multiworld)
-    world.multiworld.regions.append(menuRegion)
+    progression_type = world.options.progression_type.value
 
-    if (world.options.progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers
-     or world.options.progression_type == ProgressionType.option_Relic_Hunt_No_Progression):
+    create_regions(world, progression_type, menu_region)
+    create_goal_items(world, progression_type)
+
+def create_regions(world: "DomeKeeperWorld", progression_type: int, menu_region: Region):
+    if progression_type in (
+        ProgressionType.option_Relic_Hunt_Progression_Layers,
+        ProgressionType.option_Relic_Hunt_No_Progression,
+    ):
         create_every_regions_relic_hunt(world)
-        # link up our region with the entrance we just made
-        menuRegion.connect(world.multiworld.get_region('Layer 1', world.player))
-    
-    if world.options.progression_type == ProgressionType.option_Guild_Assignments:
+        menu_region.connect(world.multiworld.get_region(layer_region_name(1), world.player), layer_entrance_name(1))
+    elif progression_type == ProgressionType.option_Guild_Assignments:
         create_every_regions_guild_assignments(world)
-    
 
-    world.multiworld.completion_condition[world.player] = lambda state: state.has_all(
-        world.goalItems, world.player
-    )
+def create_goal_items(world: "DomeKeeperWorld", progression_type: int):
+    if progression_type == ProgressionType.option_Guild_Assignments:
+        world.multiworld.completion_condition[world.player] = (
+            lambda state: state.has_all(world.goal_items, world.player)
+        )
+    elif progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
+        required = len(world.goal_items)  # number of layer unlock items generated
+        world.multiworld.completion_condition[world.player] = (
+            lambda state, required=required: state.has(item_layer_unlock.name, world.player, required)
+        )
+    else:
+        deepest = get_layers_amount_from_map_size(world.options.map_size.value)
+        target = layer_artifact_location_name(deepest)
+        world.multiworld.completion_condition[world.player] = (
+            lambda state, target=target: state.can_reach_location(target, world.player)
+        )
 
 # player >= 2
 def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
@@ -92,20 +123,20 @@ def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
 
         region.locations.append(map_location(progression_locations[i], world, region, LocationProgressType.DEFAULT))
         region.locations.append(map_location(non_progression_locations[i], world, region, LocationProgressType.EXCLUDED))
-        region.locations.append(map_location(location_assignments_first_charm[i], world, region, LocationProgressType.DEFAULT))
-        region.locations.append(map_location(location_assignments_second_charm[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(location_assignments_first_artifact[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(location_assignments_second_artifact[i], world, region, LocationProgressType.DEFAULT))
 
         menu_region.connect(region)
         world.multiworld.regions.append(region)
 
 def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
     caves_location: list[DomeKeeperLocationData] = generate_caves_locations()
-    charms_location: list[DomeKeeperLocationData] = generate_charms_locations()
-    switchesPerLayer = world.switchesPerLayer
+    charms_location: list[DomeKeeperLocationData] = generate_artifacts_locations()
+    switchesPerLayer = world.switches_per_layer
 
     layerNumber = 1
     for switches in switchesPerLayer:
-        region = Region("Layer " + str(layerNumber), world.player, world.multiworld)
+        region = Region(layer_region_name(layerNumber), world.player, world.multiworld)
 
         # layerNumber - 1 cause I want the index layer
         # [:switches] because I want only the x first switches for that layer
@@ -133,8 +164,8 @@ def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
         
         world.multiworld.regions.append(region)
         if layerNumber >= 2:
-            world.multiworld.get_region('Layer ' + str(layerNumber - 1), world.player).connect(region)
-
+            previous = world.multiworld.get_region(layer_region_name(layerNumber - 1), world.player)
+            previous.connect(region, layer_entrance_name(layerNumber))
         layerNumber += 1
 
 def map_locations(locations: list[DomeKeeperLocationData],

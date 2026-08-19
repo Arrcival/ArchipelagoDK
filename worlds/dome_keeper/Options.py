@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 from Options import PerGameCommonOptions, Choice, DeathLink, Range, StartInventoryPool, Toggle
 
+class HaveDLC(Toggle):
+    """Do you own the DLC? Beastmaster and infiltrator are only available if you own the DLC. If unchecked, picking random will be only Engineer/Assessor."""
+    internal_name = "have_dlc"
+    display_name = "Have DLC"
 
 class Keeper(Choice):
     """What Keeper do you wish to play with."""
@@ -8,6 +12,8 @@ class Keeper(Choice):
     display_name = "Keeper"
     option_Engineer = 0
     option_Assessor = 1
+    option_Beastmaster = 2
+    option_Infiltrator = 3
     default = "random"
 
 class Dome(Choice):
@@ -76,6 +82,26 @@ class SphereLifetimeUpgradesAmount(Range):
     range_end = 15
     default = 6
     display_name = "Sphere lifetime upgrades"
+
+class KunaiUpgradesAmount(Range):
+    """The amount of kunai upgrades (when playing infiltrator) in the item pool.
+    It is not recommended to go lower than 6~7 on large/huge maps.
+    """
+    internal_name = "kunai_upgrades"
+    range_start = 5
+    range_end = 10
+    default = 7
+    display_name = "Kunai upgrades"
+
+class CatgoblinsAmount(Range):
+    """The amount of catgoblins (when playing beastmaster) in the item pool.
+    It is not recommended to go lower than 6~7 on large/huge maps.
+    """
+    internal_name = "catgoblins_amount"
+    range_start = 4
+    range_end = 14
+    default = 7
+    display_name = "Catgoblins amount"
 
 class DroneyardDronesAmount(Range):
     """The amount of droneyard drone upgrades (when using the droneyard) in the item pool."""
@@ -184,6 +210,7 @@ class StartingAssignment(Choice):
 
 @dataclass
 class DomeKeeperOptions(PerGameCommonOptions):
+    have_dlc: HaveDLC
     keeper: Keeper
     dome: Dome
     dome_gadget: DomeGadget
@@ -193,6 +220,8 @@ class DomeKeeperOptions(PerGameCommonOptions):
     drill_upgrades: DrillUpgradesAmount
     kinetic_spheres: KineticSpheresUpgradesAmount
     sphere_lifetime: SphereLifetimeUpgradesAmount
+    kunai_upgrades: KunaiUpgradesAmount
+    catgoblins_amount: CatgoblinsAmount
     droneyard_drones: DroneyardDronesAmount
     extra_cobalt: ExtraCobaltFiller
     extra_water: ExtraWaterFiller
@@ -205,5 +234,4 @@ class DomeKeeperOptions(PerGameCommonOptions):
     starting_cobalt: StartingCobaltItems
     first_assignment: StartingAssignment
     assignment_amount: AssignmentCompletionGoal
-    death_link: DeathLink
     start_inventory_from_pool: StartInventoryPool
