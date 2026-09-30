@@ -26,8 +26,8 @@ DOME_KEEPER_ITEM_INDEX_DRONEYARD = DOME_KEEPER_ITEM_INDEX + 85
 DOME_KEEPER_ITEM_INDEX_COBALT = DOME_KEEPER_ITEM_INDEX + 90
 DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 95
 DOME_KEEPER_ITEM_INDEX_LAYERS = DOME_KEEPER_ITEM_INDEX + 100
-DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110 # TO BE IMPLEMENTED
-DOME_KEEPER_ITEM_INDEX_BEASTMASTER = DOME_KEEPER_ITEM_INDEX + 120 # TO BE IMPLEMENTED
+DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110
+DOME_KEEPER_ITEM_INDEX_BEASTMASTER = DOME_KEEPER_ITEM_INDEX + 120
 
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
@@ -67,7 +67,7 @@ item_infiltrator_progressive_shuriken    : ItemDataCode = ItemDataCode(DOME_KEEP
 
 # beastmaster
 item_beastmaster_speed             : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 0, "Move speed upgrade") # 3
-item_beastmaster_mining            : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 1, "Mining upgrade") # 3
+item_beastmaster_mining            : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 1, "Mining upgrade", classification=IC.progression) # 4-?
 item_beastmaster_catgoblin_amount  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 2, "Catgoblin amount", classification=IC.progression) # 14 max
 item_beastmaster_catgoblin_mining  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 3, "Catgoblin mining upgrade") # 3
 item_beastmaster_squad_amount      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 4, "Catgoblin squad amount") # 3
@@ -105,12 +105,10 @@ item_shield_strength  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SHIEL
 item_shield_special   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SHIELD + 1, "Shield ability")
 item_shield_overcharge: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_SHIELD + 2, "Shield overcharge")
 
-# 14
+# 9
 item_orchard_duration    : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ORCHARD + 0, "Fruit duration")
 item_orchard_overcharge  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ORCHARD + 1, "Orchard overcharge")
 item_orchard_special     : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ORCHARD + 2, "Orchard ability")
-item_orchard_speed_boost : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ORCHARD + 3, "Fruit speed boost")
-item_orchard_mining_boost: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ORCHARD + 4, "Fruit mining boost")
 
 # 21
 item_droneyard_drones    : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_DRONEYARD + 0, "Droneyard drones amount") # 10 max
@@ -123,26 +121,39 @@ item_layer_unlock        : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_LA
 
 #region Async items
 
-item_assignment_unlock_showdown:            ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 0 , "Showdown assignment unlock", IC.progression)
-item_assignment_unlock_iron_contribution:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 1 , "Iron contribution assignment unlock", IC.progression)
-item_assignment_unlock_upside_down:         ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 2 , "Upside down assignment unlock", IC.progression)
-item_assignment_unlock_maze:                ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 3 , "Maze assignment unlock", IC.progression)
-item_assignment_unlock_projectile_hell:     ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 4 , "Projectile hell assignment unlock", IC.progression)
-item_assignment_unlock_dense_iron:          ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 5 , "Dense iron assignment unlock", IC.progression)
-item_assignment_unlock_barren_lands:        ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 6 , "Barren lands assignment unlock", IC.progression)
-item_assignment_unlock_defective_weapon:    ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 7 , "Defective weapon assignment unlock", IC.progression)
-item_assignment_unlock_heavy_hitters:       ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 8 , "Heavy hitters assignment unlock", IC.progression)
-item_assignment_unlock_swiss_cheese:        ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 9 , "Swiss cheese assignment unlock", IC.progression)
-item_assignment_unlock_logistical_problem:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 10, "Logistical problem assignment unlock", IC.progression)
-item_assignment_unlock_high_risk:           ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 11, "High risk assignment unlock", IC.progression)
-item_assignment_unlock_monster_masses:      ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 12, "Monster masses assignment unlock", IC.progression)
-item_assignment_unlock_iron_shortage:       ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 13, "Iron shortage assignment unlock", IC.progression)
-item_assignment_unlock_mining_problem:      ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 14, "Mining problem assignment unlock", IC.progression)
-item_assignment_unlock_cobalt_contribution: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 15, "Cobalt contribution assignment unlock", IC.progression)
+item_assignment_unlock_showdown:                ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 0 , "Showdown assignment unlock", IC.progression)
+item_assignment_unlock_iron_contribution:       ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 1 , "Iron contribution assignment unlock", IC.progression)
+item_assignment_unlock_upside_down:             ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 2 , "Upside down assignment unlock", IC.progression)
+item_assignment_unlock_maze:                    ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 3 , "Maze assignment unlock", IC.progression)
+item_assignment_unlock_projectile_hell:         ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 4 , "Projectile hell assignment unlock", IC.progression)
+item_assignment_unlock_dense_iron:              ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 5 , "Dense iron assignment unlock", IC.progression)
+item_assignment_unlock_barren_lands:            ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 6 , "Barren lands assignment unlock", IC.progression)
+item_assignment_unlock_defective_weapon:        ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 7 , "Defective weapon assignment unlock", IC.progression)
+item_assignment_unlock_heavy_hitters:           ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 8 , "Heavy hitters assignment unlock", IC.progression)
+item_assignment_unlock_swiss_cheese:            ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 9 , "Swiss cheese assignment unlock", IC.progression)
+item_assignment_unlock_logistical_problem:      ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 10, "Logistical problem assignment unlock", IC.progression)
+item_assignment_unlock_high_risk:               ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 11, "High risk assignment unlock", IC.progression)
+item_assignment_unlock_monster_masses:          ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 12, "Monster masses assignment unlock", IC.progression)
+item_assignment_unlock_iron_shortage:           ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 13, "Iron shortage assignment unlock", IC.progression)
+item_assignment_unlock_mining_problem:          ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 14, "Mining problem assignment unlock", IC.progression)
+item_assignment_unlock_cobalt_contribution:     ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 15, "Cobalt contribution assignment unlock", IC.progression)
+item_assignment_unlock_broken_comms:            ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 16, "Broken comms assignment unlock", IC.progression)
+item_assignment_unlock_darkness:                ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 17, "Darkness assignment unlock", IC.progression)
+item_assignment_unlock_tree_farm:               ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 18, "Tree Farm assignment unlock", IC.progression)
+item_assignment_unlock_acid_rain:               ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 19, "Acid Rain assignment unlock", IC.progression)
+item_assignment_unlock_hazardous_iron:          ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 20, "Hazardous Iron assignment unlock", IC.progression)
+item_assignment_unlock_emergency:               ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 21, "Emergency assignment unlock", IC.progression)
+item_assignment_unlock_brutal_monsters:         ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 22, "Brutal Monsters assignment unlock", IC.progression)
+item_assignment_unlock_logistical_nightmare:    ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 23, "Logistical Nightmare assignment unlock", IC.progression)
+item_assignment_unlock_survival_of_the_fittest: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 24, "Survival of the Fittest assignment unlock", IC.progression)
 
-item_assignment_starting_iron:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 20, "Extra starting iron", IC.filler)
-item_assignment_starting_water:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 21, "Extra starting water", IC.filler)
-item_assignment_starting_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 22, "Extra starting cobalt", IC.filler)
+
+item_assignment_starting_iron:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 30, "Extra starting iron", IC.filler)
+item_assignment_starting_water:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 31, "Extra starting water", IC.filler)
+item_assignment_starting_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 32, "Extra starting cobalt", IC.filler)
+
+item_assignment_mining_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 33, "Progressive mining strength")
+item_assignment_movement_speed:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 34, "Progressive movement speed")
 
 item_assignments = [
     item_assignment_unlock_showdown,
@@ -160,7 +171,16 @@ item_assignments = [
     item_assignment_unlock_monster_masses,   
     item_assignment_unlock_iron_shortage,
     item_assignment_unlock_mining_problem, 
-    item_assignment_unlock_cobalt_contribution
+    item_assignment_unlock_cobalt_contribution,
+    item_assignment_unlock_broken_comms,         
+    item_assignment_unlock_darkness,            
+    item_assignment_unlock_tree_farm,           
+    item_assignment_unlock_acid_rain,          
+    item_assignment_unlock_hazardous_iron,      
+    item_assignment_unlock_emergency,         
+    item_assignment_unlock_brutal_monsters,     
+    item_assignment_unlock_logistical_nightmare,
+    item_assignment_unlock_survival_of_the_fittest
 ]
 
 #endregion
@@ -181,7 +201,7 @@ all_items : list[ItemDataCode] = [
 
     item_repellent_delay, item_repellent_special, item_repellent_overcharge,
     item_shield_strength, item_shield_special, item_shield_overcharge,
-    item_orchard_duration, item_orchard_overcharge, item_orchard_special, item_orchard_speed_boost, item_orchard_mining_boost,
+    item_orchard_duration, item_orchard_overcharge, item_orchard_special,
     item_droneyard_drones, item_droneyard_speed, item_droneyard_special, item_droneyard_overcharge,
 
     item_layer_unlock,
@@ -192,14 +212,25 @@ all_items : list[ItemDataCode] = [
     item_assignment_unlock_projectile_hell, item_assignment_unlock_dense_iron, item_assignment_unlock_barren_lands, item_assignment_unlock_defective_weapon,
     item_assignment_unlock_heavy_hitters, item_assignment_unlock_swiss_cheese, item_assignment_unlock_logistical_problem, item_assignment_unlock_high_risk,
     item_assignment_unlock_monster_masses, item_assignment_unlock_iron_shortage, item_assignment_unlock_mining_problem, item_assignment_unlock_cobalt_contribution,
-    item_assignment_starting_iron, item_assignment_starting_water, item_assignment_starting_cobalt
+    item_assignment_unlock_broken_comms,         
+    item_assignment_unlock_darkness,            
+    item_assignment_unlock_tree_farm,           
+    item_assignment_unlock_acid_rain,          
+    item_assignment_unlock_hazardous_iron,      
+    item_assignment_unlock_emergency,         
+    item_assignment_unlock_brutal_monsters,     
+    item_assignment_unlock_logistical_nightmare,
+    item_assignment_unlock_survival_of_the_fittest,
+    item_assignment_starting_iron, item_assignment_starting_water, item_assignment_starting_cobalt,
+
+    item_assignment_movement_speed, item_assignment_mining_strength
 ]
 
 def generate_item(player: int, itemDataCode: ItemDataCode) -> Item:
     return Item(itemDataCode.name, itemDataCode.classification, itemDataCode.code, player)
 
 def generate_items(player: int, itemDataCode: ItemDataCode, count: int) -> list[Item]:
-    rtr = []
+    rtr: list[Item] = []
     for _ in range(count):
         rtr.append(generate_item(player, itemDataCode))
     return rtr
@@ -232,7 +263,7 @@ def generate_infiltrator_upgrades(player: int, mining_upgrades: int) -> list[Ite
     rtr.extend(generate_items(player, item_infiltrator_progressive_shuriken,            4))
     return rtr
 
-def generate_beastmaster_upgrades(player: int, goblins_amount: int) -> list[Item]:
+def generate_beastmaster_upgrades(player: int, mining_upgrades_amount: int, goblins_amount: int) -> list[Item]:
     rtr: list[Item] = []
     rtr.extend(generate_items(player, item_beastmaster_speed           ,            3))
     rtr.extend(generate_items(player, item_beastmaster_mining          ,            3))
@@ -291,8 +322,6 @@ def generate_orchard_upgrades(player: int) -> list[Item]:
     rtr.extend(generate_items(player, item_orchard_duration    ,        3))
     rtr.extend(generate_items(player, item_orchard_overcharge  ,        2))
     rtr.extend(generate_items(player, item_orchard_special     ,        3))
-    rtr.extend(generate_items(player, item_orchard_speed_boost ,        3))
-    rtr.extend(generate_items(player, item_orchard_mining_boost,        3))
     return rtr
 
 def generate_droneyard_upgrades(player: int, drones_amount: int) -> list[Item]:
@@ -337,6 +366,15 @@ def generate_unlocks(player: int) -> list[Item]:
     rtr.append(generate_item(player, item_assignment_unlock_iron_shortage      ))
     rtr.append(generate_item(player, item_assignment_unlock_mining_problem     ))
     rtr.append(generate_item(player, item_assignment_unlock_cobalt_contribution))
+    rtr.append(generate_item(player, item_assignment_unlock_broken_comms          ))
+    rtr.append(generate_item(player, item_assignment_unlock_darkness              ))
+    rtr.append(generate_item(player, item_assignment_unlock_tree_farm             ))
+    rtr.append(generate_item(player, item_assignment_unlock_acid_rain             ))
+    rtr.append(generate_item(player, item_assignment_unlock_hazardous_iron        ))
+    rtr.append(generate_item(player, item_assignment_unlock_emergency             ))
+    rtr.append(generate_item(player, item_assignment_unlock_brutal_monsters       ))
+    rtr.append(generate_item(player, item_assignment_unlock_logistical_nightmare  ))
+    rtr.append(generate_item(player, item_assignment_unlock_survival_of_the_fittest))
     return rtr
 
 def generate_traps(player: int, traps_amount: int) -> list[Item]:
@@ -350,3 +388,9 @@ def generate_water_rewards(player: int, water_amount: int) -> list[Item]:
 
 def generate_cobalt_rewards(player: int, cobalt_amount: int) -> list[Item]:
     return generate_items(player, item_assignment_starting_cobalt, cobalt_amount)
+
+def generate_mining_strength_rewards(player: int, mining_strength_rewards: int) -> list[Item]:
+    return generate_items(player, item_assignment_mining_strength, mining_strength_rewards)
+
+def generate_movement_speed_rewards(player: int, movement_speed_rewards: int) -> list[Item]:
+    return generate_items(player, item_assignment_movement_speed, movement_speed_rewards)

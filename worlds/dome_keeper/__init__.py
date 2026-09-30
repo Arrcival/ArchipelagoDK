@@ -26,6 +26,8 @@ from .Items import (
     generate_iron_rewards,
     generate_water_rewards,
     generate_cobalt_rewards,
+    generate_mining_strength_rewards,
+    generate_movement_speed_rewards,
     item_filler_iron,
     ItemDataCode
 )
@@ -34,11 +36,14 @@ from .Option_Groups import dk_option_groups
 from .Locations import generate_locations_data, get_layers_amount_from_map_size, get_non_switch_location_count
 from .Regions import create_every_regions
 from .Presets import dk_options_presets
+from .Utils import ASSIGNMENTS_AMOUNT
 
 
 AP_VERSION = "2.0.0"
 
-TOTAL_RESOURCES_GA = 49
+TOTAL_GA_LOCATIONS = ASSIGNMENTS_AMOUNT * 4  # regular + challenge + 2 treasures
+TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1     # one assignment starts unlocked
+TOTAL_RESOURCES_GA = TOTAL_GA_LOCATIONS - TOTAL_GA_UNLOCKS
 
 class DomeKeeperWeb(WebWorld):
     options_presets = dk_options_presets
@@ -109,10 +114,16 @@ class DomeKeeperWorld(World):
             unlocks = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
             pool += unlocks
 
-            iron_amount = TOTAL_RESOURCES_GA - self.options.starting_water.value - self.options.starting_cobalt.value - self.options.trap_wave.value
+            iron_amount = TOTAL_RESOURCES_GA - self.options.starting_water.value 
+            iron_amount -= self.options.starting_cobalt.value 
+            iron_amount -= self.options.trap_wave.value
+            iron_amount -= self.options.mining_strength_amount.value
+            iron_amount -= self.options.movement_speed_amount.value
             pool += generate_iron_rewards(self.player, iron_amount)
             pool += generate_water_rewards(self.player, self.options.starting_water.value)
             pool += generate_cobalt_rewards(self.player, self.options.starting_cobalt.value)
+            pool += generate_mining_strength_rewards(self.player, self.options.mining_strength_amount.value)
+            pool += generate_movement_speed_rewards(self.player, self.options.movement_speed_amount.value)
             return pool
 
         # Sync items
@@ -128,7 +139,7 @@ class DomeKeeperWorld(World):
         if keeper_value == Keeper.option_Infiltrator:
             pool += generate_infiltrator_upgrades(self.player, self.options.kunai_upgrades.value)
         if keeper_value == Keeper.option_Beastmaster:
-            pool += generate_beastmaster_upgrades(self.player, self.options.catgoblins_amount.value)
+            pool += generate_beastmaster_upgrades(self.player, self.options.beastmaster_mining_amount.value, self.options.catgoblins_amount.value)
 
         if self.options.dome.value == Dome.option_Laser:
             pool += generate_laser_upgrades(self.player)
@@ -167,7 +178,7 @@ class DomeKeeperWorld(World):
     def create_regions(self):
         create_every_regions(self)
 
-    def fill_slot_data(self) -> dict:
+    def fill_slot_data(self) -> dict[str, str | int | list[int]]:
         return {
             "seed": "".join(self.random.choice(string.digits) for _ in range(8)),
             "keeper": self.options.keeper.value,
@@ -181,12 +192,17 @@ class DomeKeeperWorld(World):
             "kineticSpheres": self.options.kinetic_spheres.value,
             "sphereLifetime": self.options.sphere_lifetime.value,
             "kunaiUpgrades": self.options.kunai_upgrades.value,
+            "beastmasterMiningUpgrades": self.options.beastmaster_mining_amount.value,
             "catgoblinsAmount": self.options.catgoblins_amount.value,
             "dronesAmount": self.options.droneyard_drones.value,
             "progressionType": self.options.progression_type.value,
             "miningEverything": self.options.mining_everything.value,
             "assignmentsAmount": self.options.assignment_amount.value,
             "startingGA": self.options.first_assignment.value,
+            "defaultMining": self.options.default_mining_strength.value,
+            "miningBonus": self.options.mining_strength_value.value,
+            "defaultMovement": self.options.default_movement_speed.value,
+            "movementBonus": self.options.movement_speed_value.value,
             "challengeMode": self.options.challenge_mode.value
         }
 

@@ -8,7 +8,7 @@ from worlds.dome_keeper.Items import (
     item_beastmaster_catgoblin_amount,
     item_layer_unlock
 )
-from worlds.dome_keeper.Regions import GUILD_ASSIGNMENT_NAMES, layer_entrance_name
+from worlds.dome_keeper.Utils import layer_entrance_name, GUILD_ASSIGNMENT_NAMES, assignment_entrance_name
 from worlds.generic.Rules import set_rule
 from worlds.dome_keeper.Options import ProgressionType
 
@@ -24,14 +24,17 @@ def set_every_rules(world: "DomeKeeperWorld", player: int):
         set_rh_noprogression_rules(world, player)
 
 def set_guild_assignment_rules(world: "DomeKeeperWorld", player: int):
-    unlocks = get_unlocks_without_starting(player, world.options.first_assignment.value)
-    guild_assignments_names = GUILD_ASSIGNMENT_NAMES.copy()
-    guild_assignments_names.pop(world.options.first_assignment.value)
-    for i in range(len(guild_assignments_names)):
-        unlock_name = unlocks[i].name
+    first_assignment = world.options.first_assignment.value
+    unlocks = get_unlocks_without_starting(player, first_assignment)
+
+    assignment_indexes_to_lock = [
+        i for i in range(len(GUILD_ASSIGNMENT_NAMES)) if i != first_assignment
+    ]
+
+    for unlock, assignment_index in zip(unlocks, assignment_indexes_to_lock):
         set_rule(
-            world.multiworld.get_entrance("Menu -> " + guild_assignments_names[i], player),
-            lambda state, unlock_name=unlock_name: state.has(unlock_name, player)
+            world.multiworld.get_entrance(assignment_entrance_name(assignment_index), player),
+            lambda state, unlock_name=unlock.name: state.has(unlock_name, player)
         )
 
 def set_rh_progression_rules(world: "DomeKeeperWorld", player: int):

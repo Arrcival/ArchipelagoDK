@@ -1,11 +1,13 @@
-from typing import List
-
 from Options import DeathLink, ProgressionBalancing, Accessibility, OptionGroup
-from .Options import (AssignmentCompletionGoal, Dome, ExtraIronFiller, ExtraWaterFiller, Keeper, DomeGadget, MapSize, Difficulty, DrillUpgradesAmount, ProgressionType,
-                      KineticSpheresUpgradesAmount, SphereLifetimeUpgradesAmount, DroneyardDronesAmount, ExtraCobaltFiller, MiningEverythingVictory,
-                      MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, StartingAssignment, TrapWaveShortener, KunaiUpgradesAmount, CatgoblinsAmount, HaveDLC)
+from .Options import (
+    AssignmentCompletionGoal, Dome, ExtraIronFiller, ExtraWaterFiller, Keeper, DomeGadget, MapSize, Difficulty, 
+    DrillUpgradesAmount, ProgressionType, KineticSpheresUpgradesAmount, SphereLifetimeUpgradesAmount, BeastmasterMiningUpgradesAmount, DroneyardDronesAmount, 
+    ExtraCobaltFiller, MiningEverythingVictory, MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, 
+    StartingAssignment, TrapWaveShortener, KunaiUpgradesAmount, CatgoblinsAmount, HaveDLC,
+    DefaultMiningStrength, DefaultMovementSpeed, MiningStrengthBonusValue, MiningStrengthBonusAmount, MovementSpeedBonusValue, MovementSpeedBonusAmount
+    )
 
-dk_option_groups: List[OptionGroup] = [
+dk_option_groups: list[OptionGroup] = [
     OptionGroup("General", [
         ProgressionType,
         DeathLink,
@@ -28,6 +30,7 @@ dk_option_groups: List[OptionGroup] = [
         SphereLifetimeUpgradesAmount,
         DroneyardDronesAmount,
         KunaiUpgradesAmount,
+        BeastmasterMiningUpgradesAmount,
         CatgoblinsAmount,
         ExtraCobaltFiller,
         ExtraWaterFiller,
@@ -38,6 +41,12 @@ dk_option_groups: List[OptionGroup] = [
         StartingWaterItems,
         StartingCobaltItems,
         StartingAssignment,
-        AssignmentCompletionGoal
+        AssignmentCompletionGoal,
+        DefaultMiningStrength,
+        MiningStrengthBonusValue,
+        MiningStrengthBonusAmount,
+        DefaultMovementSpeed,
+        MovementSpeedBonusValue,
+        MovementSpeedBonusAmount
     ]),
 ]

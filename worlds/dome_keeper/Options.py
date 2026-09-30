@@ -5,6 +5,7 @@ class HaveDLC(Toggle):
     """Do you own the DLC? Beastmaster and infiltrator are only available if you own the DLC. If unchecked, picking random will be only Engineer/Assessor."""
     internal_name = "have_dlc"
     display_name = "Have DLC"
+    default = True
 
 class Keeper(Choice):
     """What Keeper do you wish to play with."""
@@ -93,6 +94,16 @@ class KunaiUpgradesAmount(Range):
     default = 7
     display_name = "Kunai upgrades"
 
+class BeastmasterMiningUpgradesAmount(Range):
+    """The amount of beastmaster mining upgrades
+    It is not recommended to go lower than 6~7 on large/huge maps.
+    """
+    internal_name = "beastmaster_mining_amount"
+    range_start = 4
+    range_end = 14
+    default = 7
+    display_name = "Beastmaster mining upgrade amount"
+
 class CatgoblinsAmount(Range):
     """The amount of catgoblins (when playing beastmaster) in the item pool.
     It is not recommended to go lower than 6~7 on large/huge maps.
@@ -157,6 +168,61 @@ class MiningEverythingVictory(Toggle):
     internal_name = "mining_everything"
     display_name = "Mining everything goal"
 
+class DefaultMiningStrength(Range):
+    """
+    Default percentage of mining strength in guild assignments.
+    100 means 100% which is starting as normal
+    """
+    internal_name = "default_mining_strength"
+    display_name = "Default mining strength"
+    range_start = 80
+    range_end = 120
+    default = 100
+
+class MiningStrengthBonusValue(Range):
+    """Movement speed bonus gain in guild assignments for checks"""
+    internal_name = "mining_strength_checks"
+    display_name = "Mining strength check value"
+    range_start = 0
+    range_end = 10
+    default = 5
+
+class MiningStrengthBonusAmount(Range):
+    """Movement speed bonus gain in guild assignments for checks"""
+    internal_name = "mining_strength_amount"
+    display_name = "Mining strength check amount"
+    range_start = 0
+    range_end = 10
+    default = 5
+
+class DefaultMovementSpeed(Range):
+    """
+    Default percentage of movement speed in guild assignments
+    100 means 100% which is starting as normal
+    """
+    internal_name = "default_movement_speed"
+    display_name = "Default movement speed"
+    range_start = 80
+    range_end = 120
+    default = 100
+
+class MovementSpeedBonusValue(Range):
+    """Movement speed bonus gain in guild assignments for checks"""
+    internal_name = "movement_speed_checks"
+    display_name = "Movement speed check value"
+    range_start = 0
+    range_end = 10
+    default = 5
+
+class MovementSpeedBonusAmount(Range):
+    """Movement speed bonus amount in guild assignments for checks"""
+    internal_name = "movement_speed_amount"
+    display_name = "Movement speed check amount"
+    range_start = 0
+    range_end = 10
+    default = 5
+
+
 class MustBeChallengeMode(Toggle):
     """Progression locations are flagged as progression in challenge mode instead of regular."""
     internal_name = "challenge_mode"
@@ -167,7 +233,7 @@ class AssignmentCompletionGoal(Range):
     internal_name = "assignment_amount"
     display_name = "Assignment completion amount"
     range_start = 1
-    range_end = 16
+    range_end = 25
     default = 16
 
 class StartingWaterItems(Range):
@@ -206,6 +272,15 @@ class StartingAssignment(Choice):
     option_Iron_shortage = 13
     option_Mining_problem = 14
     option_Cobalt_contribution = 15
+    option_Broken_comms = 16
+    option_Darkness = 17
+    option_Tree_Farm = 18
+    option_Acid_Rain = 19
+    option_Hazardous_Iron = 20
+    option_Emergency = 21
+    option_Brutal_Monsters = 22
+    option_Logistical_Nightmare = 23
+    option_Survival_of_the_Fittest = 24
     default = "random"
 
 @dataclass
@@ -221,6 +296,7 @@ class DomeKeeperOptions(PerGameCommonOptions):
     kinetic_spheres: KineticSpheresUpgradesAmount
     sphere_lifetime: SphereLifetimeUpgradesAmount
     kunai_upgrades: KunaiUpgradesAmount
+    beastmaster_mining_amount: BeastmasterMiningUpgradesAmount
     catgoblins_amount: CatgoblinsAmount
     droneyard_drones: DroneyardDronesAmount
     extra_cobalt: ExtraCobaltFiller
@@ -232,6 +308,12 @@ class DomeKeeperOptions(PerGameCommonOptions):
     challenge_mode: MustBeChallengeMode
     starting_water: StartingWaterItems
     starting_cobalt: StartingCobaltItems
+    default_mining_strength: DefaultMiningStrength
+    mining_strength_value: MiningStrengthBonusValue
+    mining_strength_amount: MiningStrengthBonusAmount
+    default_movement_speed: DefaultMovementSpeed
+    movement_speed_value: MovementSpeedBonusValue
+    movement_speed_amount: MovementSpeedBonusAmount
     first_assignment: StartingAssignment
     assignment_amount: AssignmentCompletionGoal
     start_inventory_from_pool: StartInventoryPool

@@ -4,54 +4,24 @@ from worlds.dome_keeper.Options import ProgressionType
 from .Locations import (
     DomeKeeperLocationData,
     generate_caves_locations,
-    generate_artifacts_locations, 
+    generate_treasures_locations, 
     generate_switches_location_for_layer, 
     location_table_easy_upgrades, 
     location_table_hard_upgrades,
     location_table_normal_upgrades,
     location_assignments_challenge,
     location_assignments_regular,
-    location_assignments_first_artifact,
-    location_assignments_second_artifact,
+    location_assignments_first_treasure,
+    location_assignments_second_treasure,
+    #location_assignments_third_treasure,
     get_layers_amount_from_map_size
 )
 from .Items import item_layer_unlock
+from .Utils import layer_treasure_location_name, GUILD_ASSIGNMENT_NAMES, layer_region_name, assignment_entrance_name, layer_entrance_name
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld
 
-
-GUILD_ASSIGNMENT_NAMES = [
-    "Showdown",
-    "Iron contribution",
-    "Upside down",
-    "Maze",
-    "Projectile hell",
-    "Dense iron",
-    "Barren lands",
-    "Defective weapon",
-    "Heavy hitters",
-    "Swiss cheese",
-    "Logistical problem",
-    "High risk",
-    "Monster masses ",
-    "Iron shortage",
-    "Mining problem",
-    "Cobalt contribution"
-]
-
-LAYER_PREFIX = "Layer"
-ENTRANCE_SUFFIX = " entrance"
-
-def layer_region_name(layer_number: int) -> str:
-    return f"{LAYER_PREFIX} {layer_number}"
-
-def layer_entrance_name(from_layer_number: int) -> str:
-    # entrance from layer N to layer N+1
-    return f"{layer_region_name(from_layer_number)}{ENTRANCE_SUFFIX}"
-
-def layer_artifact_location_name(layer_number: int) -> str:
-    return f"{layer_region_name(layer_number)} - Artifact"
 
 class DomeKeeperLocation(Location):
     game: str = "Dome Keeper"
@@ -89,8 +59,10 @@ def create_regions(world: "DomeKeeperWorld", progression_type: int, menu_region:
 
 def create_goal_items(world: "DomeKeeperWorld", progression_type: int):
     if progression_type == ProgressionType.option_Guild_Assignments:
+        # One assignment is available from the start, so only (assignment_amount - 1) unlocks are needed.
+        required_unlocks = min(len(world.goal_items), max(0, world.options.assignment_amount.value - 1))
         world.multiworld.completion_condition[world.player] = (
-            lambda state: state.has_all(world.goal_items, world.player)
+            lambda state, required_unlocks=required_unlocks: state.has_from_list(world.goal_items, world.player, required_unlocks)
         )
     elif progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
         required = len(world.goal_items)  # number of layer unlock items generated
@@ -99,12 +71,11 @@ def create_goal_items(world: "DomeKeeperWorld", progression_type: int):
         )
     else:
         deepest = get_layers_amount_from_map_size(world.options.map_size.value)
-        target = layer_artifact_location_name(deepest)
+        target = layer_treasure_location_name(deepest)
         world.multiworld.completion_condition[world.player] = (
             lambda state, target=target: state.can_reach_location(target, world.player)
         )
 
-# player >= 2
 def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
     menu_region: Region = world.multiworld.get_region('Menu', world.player)
 
@@ -120,18 +91,18 @@ def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
     for i in range(len(GUILD_ASSIGNMENT_NAMES)):
         region = Region(GUILD_ASSIGNMENT_NAMES[i], world.player, world.multiworld)
 
-
         region.locations.append(map_location(progression_locations[i], world, region, LocationProgressType.DEFAULT))
         region.locations.append(map_location(non_progression_locations[i], world, region, LocationProgressType.EXCLUDED))
-        region.locations.append(map_location(location_assignments_first_artifact[i], world, region, LocationProgressType.DEFAULT))
-        region.locations.append(map_location(location_assignments_second_artifact[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(location_assignments_first_treasure[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(location_assignments_second_treasure[i], world, region, LocationProgressType.DEFAULT))
+        #region.locations.append(map_location(location_assignments_third_treasure[i], world, region, LocationProgressType.DEFAULT))
 
-        menu_region.connect(region)
+        menu_region.connect(region, assignment_entrance_name(i))
         world.multiworld.regions.append(region)
 
 def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
     caves_location: list[DomeKeeperLocationData] = generate_caves_locations()
-    charms_location: list[DomeKeeperLocationData] = generate_artifacts_locations()
+    charms_location: list[DomeKeeperLocationData] = generate_treasures_locations()
     switchesPerLayer = world.switches_per_layer
 
     layerNumber = 1
