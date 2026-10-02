@@ -18,6 +18,7 @@ GUILD_ASSIGNMENT_NAMES = [
     "Iron shortage",
     "Mining problem",
     "Cobalt contribution",
+    
     "Broken comms",
     "Darkness",
     "Tree Farm",

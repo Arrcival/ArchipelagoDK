@@ -48,10 +48,7 @@ def create_every_regions(world: "DomeKeeperWorld"):
     create_goal_items(world, progression_type)
 
 def create_regions(world: "DomeKeeperWorld", progression_type: int, menu_region: Region):
-    if progression_type in (
-        ProgressionType.option_Relic_Hunt_Progression_Layers,
-        ProgressionType.option_Relic_Hunt_No_Progression,
-    ):
+    if progression_type == ProgressionType.option_Relic_Hunt:
         create_every_regions_relic_hunt(world)
         menu_region.connect(world.multiworld.get_region(layer_region_name(1), world.player), layer_entrance_name(1))
     elif progression_type == ProgressionType.option_Guild_Assignments:
@@ -64,16 +61,10 @@ def create_goal_items(world: "DomeKeeperWorld", progression_type: int):
         world.multiworld.completion_condition[world.player] = (
             lambda state, required_unlocks=required_unlocks: state.has_from_list(world.goal_items, world.player, required_unlocks)
         )
-    elif progression_type == ProgressionType.option_Relic_Hunt_Progression_Layers:
+    else:
         required = len(world.goal_items)  # number of layer unlock items generated
         world.multiworld.completion_condition[world.player] = (
             lambda state, required=required: state.has(item_layer_unlock.name, world.player, required)
-        )
-    else:
-        deepest = get_layers_amount_from_map_size(world.options.map_size.value)
-        target = layer_treasure_location_name(deepest)
-        world.multiworld.completion_condition[world.player] = (
-            lambda state, target=target: state.can_reach_location(target, world.player)
         )
 
 def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):

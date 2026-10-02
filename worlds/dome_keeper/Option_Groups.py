@@ -28,10 +28,10 @@ dk_option_groups: list[OptionGroup] = [
         DrillUpgradesAmount,
         KineticSpheresUpgradesAmount,
         SphereLifetimeUpgradesAmount,
-        DroneyardDronesAmount,
         KunaiUpgradesAmount,
         BeastmasterMiningUpgradesAmount,
         CatgoblinsAmount,
+        DroneyardDronesAmount,
         ExtraCobaltFiller,
         ExtraWaterFiller,
         ExtraIronFiller

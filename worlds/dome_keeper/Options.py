@@ -13,8 +13,8 @@ class Keeper(Choice):
     display_name = "Keeper"
     option_Engineer = 0
     option_Assessor = 1
-    option_Beastmaster = 2
-    option_Infiltrator = 3
+    option_Infiltrator = 2
+    option_Beastmaster = 3
     default = "random"
 
 class Dome(Choice):
@@ -65,7 +65,7 @@ class DrillUpgradesAmount(Range):
     range_start = 5
     range_end = 10
     default = 7
-    display_name = "Drill upgrades"
+    display_name = "Engineer - Drill upgrades"
 
 class KineticSpheresUpgradesAmount(Range):
     """The amount of kinetic spheres upgrades (when playing assessor) in the item pool.
@@ -74,7 +74,7 @@ class KineticSpheresUpgradesAmount(Range):
     range_start = 5
     range_end = 10
     default = 7
-    display_name = "Kinetic spheres upgrades"
+    display_name = "Assessor - Kinetic spheres upgrades"
 
 class SphereLifetimeUpgradesAmount(Range):
     """The amount of sphere lifetime upgrades (when playing assessor) in the item pool."""
@@ -82,7 +82,7 @@ class SphereLifetimeUpgradesAmount(Range):
     range_start = 4
     range_end = 15
     default = 6
-    display_name = "Sphere lifetime upgrades"
+    display_name = "Assessor - Sphere lifetime upgrades"
 
 class KunaiUpgradesAmount(Range):
     """The amount of kunai upgrades (when playing infiltrator) in the item pool.
@@ -92,7 +92,7 @@ class KunaiUpgradesAmount(Range):
     range_start = 5
     range_end = 10
     default = 7
-    display_name = "Kunai upgrades"
+    display_name = "Infiltrator - Kunai upgrades"
 
 class BeastmasterMiningUpgradesAmount(Range):
     """The amount of beastmaster mining upgrades
@@ -102,7 +102,7 @@ class BeastmasterMiningUpgradesAmount(Range):
     range_start = 4
     range_end = 14
     default = 7
-    display_name = "Beastmaster mining upgrade amount"
+    display_name = "Beastmaster - Mining upgrade amount"
 
 class CatgoblinsAmount(Range):
     """The amount of catgoblins (when playing beastmaster) in the item pool.
@@ -112,7 +112,7 @@ class CatgoblinsAmount(Range):
     range_start = 4
     range_end = 14
     default = 7
-    display_name = "Catgoblins amount"
+    display_name = "Beastmaster - Catgoblins amount"
 
 class DroneyardDronesAmount(Range):
     """The amount of droneyard drone upgrades (when using the droneyard) in the item pool."""
@@ -158,10 +158,9 @@ class ProgressionType(Choice):
     """The type of progression you want to play with."""
     internal_name = "progression_type"
     display_name = "Progression type"
-    option_Relic_Hunt_No_Progression = 0
-    option_Relic_Hunt_Progression_Layers = 1
-    option_Guild_Assignments = 2
-    default = 1
+    option_Relic_Hunt = 0
+    option_Guild_Assignments = 1
+    default = 0
 
 class MiningEverythingVictory(Toggle):
     """You can only claim victory if you mined every single tile of the map"""
@@ -174,26 +173,26 @@ class DefaultMiningStrength(Range):
     100 means 100% which is starting as normal
     """
     internal_name = "default_mining_strength"
-    display_name = "Default mining strength"
+    display_name = "Mining - Default strength"
     range_start = 80
     range_end = 120
     default = 100
 
 class MiningStrengthBonusValue(Range):
-    """Movement speed bonus gain in guild assignments for checks"""
+    """Mining strength bonus gain in guild assignments for checks"""
     internal_name = "mining_strength_checks"
-    display_name = "Mining strength check value"
+    display_name = "Mining - Bonus % strength per check"
     range_start = 0
     range_end = 10
     default = 5
 
 class MiningStrengthBonusAmount(Range):
-    """Movement speed bonus gain in guild assignments for checks"""
+    """Mining strength bonus gain in guild assignments for checks"""
     internal_name = "mining_strength_amount"
-    display_name = "Mining strength check amount"
+    display_name = "Mining - Bonus strength check amount"
     range_start = 0
     range_end = 10
-    default = 5
+    default = 10
 
 class DefaultMovementSpeed(Range):
     """
@@ -201,7 +200,7 @@ class DefaultMovementSpeed(Range):
     100 means 100% which is starting as normal
     """
     internal_name = "default_movement_speed"
-    display_name = "Default movement speed"
+    display_name = "Movement - Default speed"
     range_start = 80
     range_end = 120
     default = 100
@@ -209,7 +208,7 @@ class DefaultMovementSpeed(Range):
 class MovementSpeedBonusValue(Range):
     """Movement speed bonus gain in guild assignments for checks"""
     internal_name = "movement_speed_checks"
-    display_name = "Movement speed check value"
+    display_name = "Movement - Bonus % speed per check"
     range_start = 0
     range_end = 10
     default = 5
@@ -217,7 +216,7 @@ class MovementSpeedBonusValue(Range):
 class MovementSpeedBonusAmount(Range):
     """Movement speed bonus amount in guild assignments for checks"""
     internal_name = "movement_speed_amount"
-    display_name = "Movement speed check amount"
+    display_name = "Movement - Bonus speed check amount"
     range_start = 0
     range_end = 10
     default = 5

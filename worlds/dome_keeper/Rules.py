@@ -18,10 +18,8 @@ if TYPE_CHECKING:
 def set_every_rules(world: "DomeKeeperWorld", player: int):
     if world.options.progression_type.value == ProgressionType.option_Guild_Assignments:
         set_guild_assignment_rules(world, player)
-    elif world.options.progression_type.value == ProgressionType.option_Relic_Hunt_Progression_Layers:
-        set_rh_progression_rules(world, player)
     else:
-        set_rh_noprogression_rules(world, player)
+        set_rh_progression_rules(world, player)
 
 def set_guild_assignment_rules(world: "DomeKeeperWorld", player: int):
     first_assignment = world.options.first_assignment.value
@@ -54,18 +52,6 @@ def set_rh_progression_rules(world: "DomeKeeperWorld", player: int):
         set_rule(world.multiworld.get_entrance(layer_entrance_name(7), player),
                 lambda state: state.has(item_layer_unlock.name, player, 6))
 
-def set_rh_noprogression_rules(world: "DomeKeeperWorld", player: int):
-    set_rule(world.multiworld.get_entrance(layer_entrance_name(2), player),
-        lambda state: has_mining_upgrade(state, player, 2))
-    set_rule(world.multiworld.get_entrance(layer_entrance_name(3), player),
-        lambda state: has_mining_upgrade(state, player, 3))
-    if world.options.map_size.value >= 1:
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(4), player),
-            lambda state: has_mining_upgrade(state, player, 4))
-    if world.options.map_size.value >= 2:
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(5), player),
-            lambda state: has_mining_upgrade(state, player, 5))
-        
 def has_mining_upgrade(state: CollectionState, player: int, tier: int) -> bool:
     return (state.has(item_engineer_drill.name, player, tier) 
         or state.has(item_assessor_spheres_strength.name, player, tier)

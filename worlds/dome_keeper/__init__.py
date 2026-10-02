@@ -95,9 +95,8 @@ class DomeKeeperWorld(World):
             return
 
         # progression items to unlock layers
-        if self.options.progression_type.value == ProgressionType.option_Relic_Hunt_Progression_Layers:
-            layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
-            self.goal_items += [item.name for item in generate_layers_upgrades(self.player, layers_unlock_amount)]
+        layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
+        self.goal_items += [item.name for item in generate_layers_upgrades(self.player, layers_unlock_amount)]
 
         item_count = len(self._build_item_pool())
         non_switch_location_count = get_non_switch_location_count(self.options.map_size.value)
@@ -159,9 +158,8 @@ class DomeKeeperWorld(World):
         if self.options.dome_gadget.value == DomeGadget.option_Droneyard:
             pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
 
-        if self.options.progression_type.value == ProgressionType.option_Relic_Hunt_Progression_Layers:
-            layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
-            pool += generate_layers_upgrades(self.player, layers_unlock_amount)
+        layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
+        pool += generate_layers_upgrades(self.player, layers_unlock_amount)
 
         pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
         pool += generate_water_upgrades(self.player, self.options.extra_water.value)
