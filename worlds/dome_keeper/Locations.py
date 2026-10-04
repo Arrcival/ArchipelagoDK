@@ -19,7 +19,7 @@ TREASURE_SYNC_FIRST_ID        = DOME_KEEPER_LOCATION_INDEX + 90
 TREASURE_ASYNC_FIRST_ID       = DOME_KEEPER_LOCATION_INDEX + 100
 SWITCHES_FIRST_ID             = DOME_KEEPER_LOCATION_INDEX + 301
 
-LAYERS_MAX_AMOUNT = 7
+LAYERS_MAX_AMOUNT = 10
 
 UPGRADES_LOCATIONS_AMOUNT = 12
 
@@ -343,15 +343,8 @@ def generate_treasures_locations() -> list[DomeKeeperLocationData] :
         rtr.append(DomeKeeperLocationData("Layer " + str(i + 1) + " - Treasure", TREASURE_SYNC_FIRST_ID + i))
     return rtr
 
-def get_layers_amount_from_map_size(map_size: int) -> int:
-    layers = map_size + 3
-    if map_size >= 2:
-        layers += 1
-    return layers
-
-def get_non_switch_location_count(map_size: int) -> int:
+def get_non_switch_location_count(layers: int) -> int:
     """Count locations that are never switch-locations for Relic Hunt modes."""
-    layers = get_layers_amount_from_map_size(map_size)
 
     upgrades_count = (
         len(location_table_easy_upgrades)

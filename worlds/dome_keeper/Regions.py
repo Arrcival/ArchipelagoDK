@@ -12,12 +12,11 @@ from .Locations import (
     location_assignments_challenge,
     location_assignments_regular,
     location_assignments_first_treasure,
-    location_assignments_second_treasure,
+    location_assignments_second_treasure
     #location_assignments_third_treasure,
-    get_layers_amount_from_map_size
 )
 from .Items import item_layer_unlock
-from .Utils import layer_treasure_location_name, GUILD_ASSIGNMENT_NAMES, layer_region_name, assignment_entrance_name, layer_entrance_name
+from .Utils import GUILD_ASSIGNMENT_NAMES, layer_region_name, assignment_entrance_name, layer_entrance_name
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld

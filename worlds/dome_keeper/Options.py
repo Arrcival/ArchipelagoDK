@@ -47,6 +47,38 @@ class MapSize(Choice):
     option_Huge = 3
     default = 3
 
+class SmallLayersAmount(Range):
+    """How many layers there is in a small map"""
+    internal_name = "small_layers"
+    range_start = 3
+    range_end = 6
+    default = 4
+    display_name = "Small map layers amount"
+
+class MediumLayersAmount(Range):
+    """How many layers there is in a medium map"""
+    internal_name = "medium_layers"
+    range_start = 3
+    range_end = 8
+    default = 6
+    display_name = "Medium map layers amount"
+
+class LargeLayersAmount(Range):
+    """How many layers there is in a large map"""
+    internal_name = "large_layers"
+    range_start = 3
+    range_end = 10
+    default = 7
+    display_name = "Large map layers amount"
+
+class HugeLayersAmount(Range):
+    """How many layers there is in a huge map"""
+    internal_name = "huge_layers"
+    range_start = 3
+    range_end = 10
+    default = 8
+    display_name = "Huge map layers amount"
+
 class Difficulty(Choice):
     """What difficulty do you wish to play with."""
     internal_name = "difficulty"
@@ -198,6 +230,7 @@ class DefaultMovementSpeed(Range):
     """
     Default percentage of movement speed in guild assignments
     100 means 100% which is starting as normal
+    Infiltrator has no speed bonuses
     """
     internal_name = "default_movement_speed"
     display_name = "Movement - Default speed"
@@ -206,7 +239,8 @@ class DefaultMovementSpeed(Range):
     default = 100
 
 class MovementSpeedBonusValue(Range):
-    """Movement speed bonus gain in guild assignments for checks"""
+    """Movement speed bonus gain in guild assignments for checks
+    Infiltrator has no speed bonuses"""
     internal_name = "movement_speed_checks"
     display_name = "Movement - Bonus % speed per check"
     range_start = 0
@@ -214,13 +248,13 @@ class MovementSpeedBonusValue(Range):
     default = 5
 
 class MovementSpeedBonusAmount(Range):
-    """Movement speed bonus amount in guild assignments for checks"""
+    """Movement speed bonus amount in guild assignments for checks
+    Infiltrator has no speed bonuses"""
     internal_name = "movement_speed_amount"
     display_name = "Movement - Bonus speed check amount"
     range_start = 0
     range_end = 10
     default = 5
-
 
 class MustBeChallengeMode(Toggle):
     """Progression locations are flagged as progression in challenge mode instead of regular."""
@@ -289,6 +323,10 @@ class DomeKeeperOptions(PerGameCommonOptions):
     dome: Dome
     dome_gadget: DomeGadget
     map_size: MapSize
+    small_layers: SmallLayersAmount
+    medium_layers: MediumLayersAmount
+    large_layers: LargeLayersAmount
+    huge_layers: HugeLayersAmount
     difficulty: Difficulty
     death_link: DeathLink
     drill_upgrades: DrillUpgradesAmount

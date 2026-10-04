@@ -31,18 +31,17 @@ from .Items import (
     item_filler_iron,
     ItemDataCode
 )
-from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget, ProgressionType, HaveDLC
+from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget, ProgressionType, HaveDLC, MapSize
 from .Option_Groups import dk_option_groups
-from .Locations import generate_locations_data, get_layers_amount_from_map_size, get_non_switch_location_count
+from .Locations import generate_locations_data, get_non_switch_location_count
 from .Regions import create_every_regions
 from .Presets import dk_options_presets
 from .Utils import ASSIGNMENTS_AMOUNT
 
-
 AP_VERSION = "2.0.0"
 
 TOTAL_GA_LOCATIONS = ASSIGNMENTS_AMOUNT * 4  # regular + challenge + 2 treasures
-TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1     # one assignment starts unlocked
+TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1    # one assignment starts unlocked
 TOTAL_RESOURCES_GA = TOTAL_GA_LOCATIONS - TOTAL_GA_UNLOCKS
 
 class DomeKeeperWeb(WebWorld):
@@ -86,7 +85,6 @@ class DomeKeeperWorld(World):
     def set_rules(self):
         set_every_rules(self, self.player)
 
-
     def generate_early(self):
         if self.options.progression_type.value == ProgressionType.option_Guild_Assignments:
 
@@ -95,14 +93,15 @@ class DomeKeeperWorld(World):
             return
 
         # progression items to unlock layers
-        layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
+        layers_unlock_amount = self.get_layers_amount_from_options() - 1
         self.goal_items += [item.name for item in generate_layers_upgrades(self.player, layers_unlock_amount)]
 
         item_count = len(self._build_item_pool())
-        non_switch_location_count = get_non_switch_location_count(self.options.map_size.value)
-
+        layers_amount = self.get_layers_amount_from_options()
+        
+        non_switch_location_count = get_non_switch_location_count(layers_amount)
         switches_amount = max(0, item_count - non_switch_location_count)
-        self.switches_per_layer = generate_switches_per_layer(switches_amount, self.options.map_size.value)
+        self.switches_per_layer = generate_switches_per_layer(switches_amount, layers_amount)
 
     def _build_item_pool(self) -> list[Item]:
         pool: list[Item] = []
@@ -158,13 +157,22 @@ class DomeKeeperWorld(World):
         if self.options.dome_gadget.value == DomeGadget.option_Droneyard:
             pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
 
-        layers_unlock_amount = get_progression_layers_amount(self.options.map_size.value)
+        layers_unlock_amount = self.get_layers_amount_from_options() - 1
         pool += generate_layers_upgrades(self.player, layers_unlock_amount)
 
         pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
         pool += generate_water_upgrades(self.player, self.options.extra_water.value)
         pool += generate_iron_upgrades(self.player, self.options.extra_iron.value)
         return pool
+
+    def get_layers_amount_from_options(self) -> int:
+        if self.options.map_size.value == MapSize.option_Small:
+            return self.options.small_layers.value
+        if self.options.map_size.value == MapSize.option_Medium:
+            return self.options.medium_layers.value
+        if self.options.map_size.value == MapSize.option_Large:
+            return self.options.large_layers.value
+        return self.options.huge_layers.value
 
     def create_items(self):
         self.multiworld.itempool += self._build_item_pool()
@@ -207,10 +215,7 @@ class DomeKeeperWorld(World):
     def get_filler_item_name(self) -> str:
         return item_filler_iron.name
 
-def generate_switches_per_layer(switchesAmount: int, mapSize: int) -> list[int]:
-    # Small : 3, medium : 4, large : 6, huge: 7
-    layers = get_layers_amount_from_map_size(mapSize)
-    
+def generate_switches_per_layer(switchesAmount: int, layers: int) -> list[int]:
     # Splits evenly switches per layers avaible
     max_value = math.floor(switchesAmount / layers)
     remaining = switchesAmount % layers
@@ -219,7 +224,3 @@ def generate_switches_per_layer(switchesAmount: int, mapSize: int) -> list[int]:
         result[i] += 1
 
     return result
-
-def get_progression_layers_amount(mapSize: int) -> int:
-    return get_layers_amount_from_map_size(mapSize) - 1 
-
