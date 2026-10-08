@@ -209,7 +209,8 @@ class DomeKeeperWorld(World):
             "miningBonus": self.options.mining_strength_value.value,
             "defaultMovement": self.options.default_movement_speed.value,
             "movementBonus": self.options.movement_speed_value.value,
-            "challengeMode": self.options.challenge_mode.value
+            "challengeMode": self.options.challenge_mode.value,
+            "relicDeath": self.options.relic_death.value
         }
 
     def get_filler_item_name(self) -> str:

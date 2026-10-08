@@ -1,6 +1,6 @@
 from Options import DeathLink, ProgressionBalancing, Accessibility, OptionGroup
 from .Options import (
-    AssignmentCompletionGoal, Dome, ExtraIronFiller, ExtraWaterFiller, HugeLayersAmount, Keeper, DomeGadget, LargeLayersAmount, MapSize, Difficulty, 
+    AssignmentCompletionGoal, Dome, ExtraIronFiller, ExtraWaterFiller, HugeLayersAmount, Keeper, DomeGadget, LargeLayersAmount, MapSize, Difficulty, RelicExplosionDeathLink,
     DrillUpgradesAmount, MediumLayersAmount, ProgressionType, KineticSpheresUpgradesAmount, SmallLayersAmount, SphereLifetimeUpgradesAmount, BeastmasterMiningUpgradesAmount, DroneyardDronesAmount, 
     ExtraCobaltFiller, MiningEverythingVictory, MustBeChallengeMode, StartingWaterItems, StartingCobaltItems, 
     StartingAssignment, TrapWaveShortener, KunaiUpgradesAmount, CatgoblinsAmount, HaveDLC,
@@ -14,7 +14,8 @@ dk_option_groups: list[OptionGroup] = [
         ProgressionBalancing,
         Accessibility,
         TrapWaveShortener,
-        HaveDLC
+        HaveDLC,
+        RelicExplosionDeathLink
     ]),
     OptionGroup("Relic hunt - General", [
         Dome,

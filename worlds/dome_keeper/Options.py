@@ -7,6 +7,12 @@ class HaveDLC(Toggle):
     display_name = "Have DLC"
     default = True
 
+class RelicExplosionDeathLink(Toggle):
+    """If death link is on and this setting too, winning from triggering the relic sends a death link to other players."""
+    internal_name = "relic_death"
+    display_name = "Relic sends DL"
+    default = False
+
 class Keeper(Choice):
     """What Keeper do you wish to play with."""
     internal_name = "keeper"
@@ -319,6 +325,7 @@ class StartingAssignment(Choice):
 @dataclass
 class DomeKeeperOptions(PerGameCommonOptions):
     have_dlc: HaveDLC
+    relic_death: RelicExplosionDeathLink
     keeper: Keeper
     dome: Dome
     dome_gadget: DomeGadget
