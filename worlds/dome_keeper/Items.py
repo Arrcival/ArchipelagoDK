@@ -28,6 +28,7 @@ DOME_KEEPER_ITEM_INDEX_TRAP = DOME_KEEPER_ITEM_INDEX + 95
 DOME_KEEPER_ITEM_INDEX_LAYERS = DOME_KEEPER_ITEM_INDEX + 100
 DOME_KEEPER_ITEM_INDEX_INFILTRATOR = DOME_KEEPER_ITEM_INDEX + 110
 DOME_KEEPER_ITEM_INDEX_BEASTMASTER = DOME_KEEPER_ITEM_INDEX + 120
+DOME_KEEPER_ITEM_INDEX_KEY = DOME_KEEPER_ITEM_INDEX + 130
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
 #endregion
@@ -36,6 +37,30 @@ item_trap_wave_shortened : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TR
 item_trap_dome_damaged   : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP + 1, "Dome damage", IC.trap)
 
 #region Sync items
+
+item_key_one:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 0, "Key 1", IC.progression)
+item_key_two:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 1, "Key 2", IC.progression)
+item_key_three: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 2, "Key 3", IC.progression)
+item_key_four:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 3, "Key 4", IC.progression)
+item_key_five:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 4, "Key 5", IC.progression)
+item_key_six:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 5, "Key 6", IC.progression)
+item_key_seven: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 6, "Key 7", IC.progression)
+item_key_eight: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 7, "Key 8", IC.progression)
+item_key_nine:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 8, "Key 9", IC.progression)
+item_key_ten:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_KEY + 9, "Key 10", IC.progression)
+
+item_keys = [
+    item_key_one,
+    item_key_two,
+    item_key_three,
+    item_key_four, 
+    item_key_five,
+    item_key_six,
+    item_key_seven,
+    item_key_eight,
+    item_key_nine, 
+    item_key_ten  
+]
 
 # fillers
 item_filler_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_COBALT, "Extra cobalt", IC.filler)
@@ -223,7 +248,10 @@ all_items : list[ItemDataCode] = [
     item_assignment_unlock_survival_of_the_fittest,
     item_assignment_starting_iron, item_assignment_starting_water, item_assignment_starting_cobalt,
 
-    item_assignment_movement_speed, item_assignment_mining_strength
+    item_assignment_movement_speed, item_assignment_mining_strength,
+
+    item_key_one, item_key_two, item_key_three, item_key_four, item_key_five, 
+    item_key_six, item_key_seven, item_key_eight, item_key_nine, item_key_ten
 ]
 
 def generate_item(player: int, itemDataCode: ItemDataCode) -> Item:
@@ -375,6 +403,12 @@ def generate_unlocks(player: int) -> list[Item]:
     rtr.append(generate_item(player, item_assignment_unlock_brutal_monsters       ))
     rtr.append(generate_item(player, item_assignment_unlock_logistical_nightmare  ))
     rtr.append(generate_item(player, item_assignment_unlock_survival_of_the_fittest))
+    return rtr
+
+def generate_keys(player: int, layers_amount: int) -> list[Item]:
+    rtr: list[Item] = []
+    for i in range(layers_amount):
+        rtr.append(generate_item(player, item_keys[i]))
     return rtr
 
 def generate_traps(player: int, traps_amount: int) -> list[Item]:

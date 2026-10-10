@@ -1,16 +1,19 @@
 from typing import TYPE_CHECKING
 from BaseClasses import CollectionState, Item
 from worlds.dome_keeper.Items import (
+    generate_keys,
     generate_unlocks,
     item_assessor_spheres_strength,
     item_engineer_drill,
     item_infiltrator_progressive_mining,
     item_beastmaster_catgoblin_amount,
-    item_layer_unlock
+    item_layer_unlock,
+    item_keys
 )
 from worlds.dome_keeper.Utils import layer_entrance_name, GUILD_ASSIGNMENT_NAMES, assignment_entrance_name
 from worlds.generic.Rules import set_rule
 from worlds.dome_keeper.Options import ProgressionType
+from worlds.dome_keeper.Locations import generate_chests_locations
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld
@@ -51,6 +54,16 @@ def set_rh_progression_rules(world: "DomeKeeperWorld", player: int):
     if world.options.map_size.value >= 3:
         set_rule(world.multiworld.get_entrance(layer_entrance_name(7), player),
                 lambda state: state.has(item_layer_unlock.name, player, 6))
+
+    layers_amount = len(world.switches_per_layer)
+    chest_locations = generate_chests_locations()
+    for i in range(layers_amount):
+        key_name = item_keys[i].name
+        chest_name = chest_locations[i].name
+        set_rule(
+            world.multiworld.get_location(chest_name, player),
+            lambda state, key_name=key_name: state.has(key_name, player)
+        )
 
 def has_mining_upgrade(state: CollectionState, player: int, tier: int) -> bool:
     return (state.has(item_engineer_drill.name, player, tier) 

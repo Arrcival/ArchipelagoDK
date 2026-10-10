@@ -1,3 +1,4 @@
+from typing import Any
 from .Utils import ASSIGNMENTS_AMOUNT
 
 class DomeKeeperLocationData():
@@ -17,6 +18,7 @@ ASSIGNMENT_FIRST_ID           = DOME_KEEPER_LOCATION_INDEX + 30
 ASSIGNMENT_CHALLENGE_FIRST_ID = DOME_KEEPER_LOCATION_INDEX + 60
 TREASURE_SYNC_FIRST_ID        = DOME_KEEPER_LOCATION_INDEX + 90
 TREASURE_ASYNC_FIRST_ID       = DOME_KEEPER_LOCATION_INDEX + 100
+CHEST_FIRST_ID          = DOME_KEEPER_LOCATION_INDEX + 200
 SWITCHES_FIRST_ID             = DOME_KEEPER_LOCATION_INDEX + 301
 
 LAYERS_MAX_AMOUNT = 10
@@ -315,30 +317,37 @@ def generate_locations_data() -> list[DomeKeeperLocationData] :
     #rtr.extend(location_assignments_third_treasure.copy())
     rtr.extend(generate_switches_locations())
     rtr.extend(generate_caves_locations())
+    rtr.extend(generate_chests_locations())
     rtr.extend(generate_treasures_locations())
     return rtr
 
 def generate_switches_locations() -> list[DomeKeeperLocationData]:
-    rtr = []
+    rtr: list[DomeKeeperLocationData] = []
     for i in range(LAYERS_MAX_AMOUNT):
         layer_switches: list[DomeKeeperLocationData] = generate_switches_location_for_layer(i)
         rtr.extend(layer_switches)
     return rtr
 
 def generate_switches_location_for_layer(layer: int) -> list[DomeKeeperLocationData]:
-    rtr = []
+    rtr: list[DomeKeeperLocationData] = []
     for i in range(LAYER_OFFSET):
         rtr.append(DomeKeeperLocationData("Layer " + str(layer + 1) + " - Switch " + str(i + 1), SWITCHES_FIRST_ID + (LAYER_OFFSET * layer) + i))
     return rtr
 
 def generate_caves_locations() -> list[DomeKeeperLocationData] :
-    rtr = []
+    rtr: list[DomeKeeperLocationData] = []
     for i in range(LAYERS_MAX_AMOUNT):
         rtr.append(DomeKeeperLocationData("Layer " + str(i + 1) + " - Cave", CAVE_FIRST_ID + i))
     return rtr
 
+def generate_chests_locations() -> list[DomeKeeperLocationData] :
+    rtr: list[DomeKeeperLocationData] = []
+    for i in range(LAYERS_MAX_AMOUNT):
+        rtr.append(DomeKeeperLocationData("Layer " + str(i + 1) + " - Chest", CHEST_FIRST_ID + i))
+    return rtr
+
 def generate_treasures_locations() -> list[DomeKeeperLocationData] :
-    rtr = []
+    rtr: list[DomeKeeperLocationData] = []
     for i in range(LAYERS_MAX_AMOUNT):
         rtr.append(DomeKeeperLocationData("Layer " + str(i + 1) + " - Treasure", TREASURE_SYNC_FIRST_ID + i))
     return rtr
@@ -353,5 +362,6 @@ def get_non_switch_location_count(layers: int) -> int:
     )
     caves_count = layers
     treasures_count = layers
+    chests_count = layers
 
-    return upgrades_count + caves_count + treasures_count
+    return upgrades_count + caves_count + treasures_count + chests_count

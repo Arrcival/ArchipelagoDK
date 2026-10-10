@@ -4,7 +4,8 @@ from worlds.dome_keeper.Options import ProgressionType
 from .Locations import (
     DomeKeeperLocationData,
     generate_caves_locations,
-    generate_treasures_locations, 
+    generate_treasures_locations,
+    generate_chests_locations, 
     generate_switches_location_for_layer, 
     location_table_easy_upgrades, 
     location_table_hard_upgrades,
@@ -49,7 +50,7 @@ def create_every_regions(world: "DomeKeeperWorld"):
 def create_regions(world: "DomeKeeperWorld", progression_type: int, menu_region: Region):
     if progression_type == ProgressionType.option_Relic_Hunt:
         create_every_regions_relic_hunt(world)
-        menu_region.connect(world.multiworld.get_region(layer_region_name(1), world.player), layer_entrance_name(1))
+        _ = menu_region.connect(world.multiworld.get_region(layer_region_name(1), world.player), layer_entrance_name(1))
     elif progression_type == ProgressionType.option_Guild_Assignments:
         create_every_regions_guild_assignments(world)
 
@@ -93,6 +94,7 @@ def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
 def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
     caves_location: list[DomeKeeperLocationData] = generate_caves_locations()
     charms_location: list[DomeKeeperLocationData] = generate_treasures_locations()
+    chests_location: list[DomeKeeperLocationData] = generate_chests_locations()
     switchesPerLayer = world.switches_per_layer
 
     layerNumber = 1
@@ -109,12 +111,16 @@ def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
 
         current_cave: DomeKeeperLocationData = caves_location.pop(0)
         current_charm: DomeKeeperLocationData = charms_location.pop(0)
+        current_chest: DomeKeeperLocationData = chests_location.pop(0)
 
         cave_location: DomeKeeperLocation = map_location(current_cave, world, region)
         region.locations.append(cave_location)
 
         charm_location: DomeKeeperLocation = map_location(current_charm, world, region)
         region.locations.append(charm_location)
+
+        chest_location: DomeKeeperLocation = map_location(current_chest, world, region)
+        region.locations.append(chest_location)
 
         if layerNumber == 1:
             region.locations.extend(map_locations(location_table_easy_upgrades, world, region, LocationProgressType.DEFAULT))
@@ -126,7 +132,7 @@ def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):
         world.multiworld.regions.append(region)
         if layerNumber >= 2:
             previous = world.multiworld.get_region(layer_region_name(layerNumber - 1), world.player)
-            previous.connect(region, layer_entrance_name(layerNumber))
+            _ = previous.connect(region, layer_entrance_name(layerNumber))
         layerNumber += 1
 
 def map_locations(locations: list[DomeKeeperLocationData],

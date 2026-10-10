@@ -19,6 +19,7 @@ from .Items import (
     generate_orchard_upgrades,
     generate_droneyard_upgrades,
     generate_layers_upgrades,
+    generate_keys,
     generate_iron_upgrades,
     generate_traps,
     generate_water_upgrades,
@@ -157,8 +158,10 @@ class DomeKeeperWorld(World):
         if self.options.dome_gadget.value == DomeGadget.option_Droneyard:
             pool += generate_droneyard_upgrades(self.player, self.options.droneyard_drones.value)
 
-        layers_unlock_amount = self.get_layers_amount_from_options() - 1
+        layers_amount = self.get_layers_amount_from_options()
+        layers_unlock_amount = layers_amount - 1
         pool += generate_layers_upgrades(self.player, layers_unlock_amount)
+        pool += generate_keys(self.player, layers_amount)
 
         pool += generate_cobalt_upgrades(self.player, self.options.extra_cobalt.value)
         pool += generate_water_upgrades(self.player, self.options.extra_water.value)
