@@ -93,7 +93,7 @@ item_infiltrator_progressive_shuriken    : ItemDataCode = ItemDataCode(DOME_KEEP
 # beastmaster
 item_beastmaster_speed             : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 0, "Move speed upgrade") # 3
 item_beastmaster_mining            : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 1, "Mining upgrade", classification=IC.progression) # 4-?
-item_beastmaster_catgoblin_amount  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 2, "Catgoblin amount", classification=IC.progression) # 14 max
+item_beastmaster_catgoblin_amount  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 2, "Catgoblin amount") # 14 max
 item_beastmaster_catgoblin_mining  : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 3, "Catgoblin mining upgrade") # 3
 item_beastmaster_squad_amount      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 4, "Catgoblin squad amount") # 3
 item_beastmaster_squad_mining      : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_BEASTMASTER + 5, "Catgoblin squad mining upgrade") # 3

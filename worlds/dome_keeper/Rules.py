@@ -6,7 +6,7 @@ from worlds.dome_keeper.Items import (
     item_assessor_spheres_strength,
     item_engineer_drill,
     item_infiltrator_progressive_mining,
-    item_beastmaster_catgoblin_amount,
+    item_beastmaster_mining,
     item_layer_unlock,
     item_keys
 )
@@ -69,7 +69,7 @@ def has_mining_upgrade(state: CollectionState, player: int, tier: int) -> bool:
     return (state.has(item_engineer_drill.name, player, tier) 
         or state.has(item_assessor_spheres_strength.name, player, tier)
         or state.has(item_infiltrator_progressive_mining.name, player, tier)
-        or state.has(item_beastmaster_catgoblin_amount.name, player, tier))
+        or state.has(item_beastmaster_mining.name, player, tier))
 
 def get_unlocks_without_starting(player: int, first_assignment: int) -> list[Item]:
     unlocks: list[Item] = generate_unlocks(player)
