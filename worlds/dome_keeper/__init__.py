@@ -39,7 +39,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 from .Utils import ASSIGNMENTS_AMOUNT
 
-AP_VERSION = "2.0.1"
+AP_VERSION = "2.0.2"
 
 TOTAL_GA_LOCATIONS = ASSIGNMENTS_AMOUNT * 4  # regular + challenge + 2 treasures
 TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1    # one assignment starts unlocked

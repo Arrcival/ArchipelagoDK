@@ -137,7 +137,7 @@ class BeastmasterMiningUpgradesAmount(Range):
     It is not recommended to go lower than 6~7 on large/huge maps.
     """
     internal_name = "beastmaster_mining_amount"
-    range_start = 4
+    range_start = 5
     range_end = 14
     default = 7
     display_name = "Beastmaster - Mining upgrade amount"

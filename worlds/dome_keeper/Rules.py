@@ -39,21 +39,23 @@ def set_guild_assignment_rules(world: "DomeKeeperWorld", player: int):
         )
 
 def set_rh_progression_rules(world: "DomeKeeperWorld", player: int):
-    set_rule(world.multiworld.get_entrance(layer_entrance_name(2), player),
-                lambda state: state.has(item_layer_unlock.name, player, 1) and has_mining_upgrade(state, player, 2))
-    set_rule(world.multiworld.get_entrance(layer_entrance_name(3), player),
-                lambda state: state.has(item_layer_unlock.name, player, 2) and has_mining_upgrade(state, player, 3))
-    if world.options.map_size.value >= 1:
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(4), player),
-                lambda state: state.has(item_layer_unlock.name, player, 3) and has_mining_upgrade(state, player, 4))
-    if world.options.map_size.value >= 2:
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(5), player),
-                lambda state: state.has(item_layer_unlock.name, player, 4) and has_mining_upgrade(state, player, 5))
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(6), player),
-                lambda state: state.has(item_layer_unlock.name, player, 5))
-    if world.options.map_size.value >= 3:
-        set_rule(world.multiworld.get_entrance(layer_entrance_name(7), player),
-                lambda state: state.has(item_layer_unlock.name, player, 6))
+    layers_amount = world.get_layers_amount_from_options()
+    for layer_number in range(2, layers_amount + 1):
+        if layer_number <= 5:
+            set_rule(
+                world.multiworld.get_entrance(layer_entrance_name(layer_number), player),
+                lambda state, layer_number=layer_number: (
+                    state.has(item_layer_unlock.name, player, layer_number - 1)
+                    and has_mining_upgrade(state, player, layer_number)
+                )
+            )
+        else:
+            set_rule(
+                world.multiworld.get_entrance(layer_entrance_name(layer_number), player),
+                lambda state, layer_number=layer_number: state.has(
+                    item_layer_unlock.name, player, layer_number - 1
+                )
+            )
 
     layers_amount = len(world.switches_per_layer)
     chest_locations = generate_chests_locations()

@@ -294,7 +294,7 @@ def generate_infiltrator_upgrades(player: int, mining_upgrades: int) -> list[Ite
 def generate_beastmaster_upgrades(player: int, mining_upgrades_amount: int, goblins_amount: int) -> list[Item]:
     rtr: list[Item] = []
     rtr.extend(generate_items(player, item_beastmaster_speed           ,            3))
-    rtr.extend(generate_items(player, item_beastmaster_mining          ,            3))
+    rtr.extend(generate_items(player, item_beastmaster_mining          ,            mining_upgrades_amount))
     rtr.extend(generate_items(player, item_beastmaster_catgoblin_amount,            goblins_amount))
     rtr.extend(generate_items(player, item_beastmaster_catgoblin_mining,            3))
     rtr.extend(generate_items(player, item_beastmaster_squad_amount    ,            3))
