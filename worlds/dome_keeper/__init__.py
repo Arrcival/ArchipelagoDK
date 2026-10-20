@@ -39,7 +39,7 @@ from .Regions import create_every_regions
 from .Presets import dk_options_presets
 from .Utils import ASSIGNMENTS_AMOUNT
 
-AP_VERSION = "2.0.0"
+AP_VERSION = "2.0.1"
 
 TOTAL_GA_LOCATIONS = ASSIGNMENTS_AMOUNT * 4  # regular + challenge + 2 treasures
 TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1    # one assignment starts unlocked
@@ -126,10 +126,7 @@ class DomeKeeperWorld(World):
             return pool
 
         # Sync items
-        keeper_value = self.options.keeper.value
-        if keeper_value == Keeper.option_Infiltrator or keeper_value == Keeper.option_Beastmaster:
-            if self.options.have_dlc.value == HaveDLC.option_false:
-                keeper_value = Keeper.option_Engineer if keeper_value == Keeper.option_Infiltrator else Keeper.option_Assessor
+        keeper_value = self.get_keeper()
 
         if keeper_value == Keeper.option_Engineer:
             pool += generate_engineer_upgrades(self.player, self.options.drill_upgrades.value)
@@ -168,6 +165,13 @@ class DomeKeeperWorld(World):
         pool += generate_iron_upgrades(self.player, self.options.extra_iron.value)
         return pool
 
+    def get_keeper(self) -> int:
+        keeper_value = self.options.keeper.value
+        if keeper_value == Keeper.option_Infiltrator or keeper_value == Keeper.option_Beastmaster:
+            if self.options.have_dlc.value == HaveDLC.option_false:
+                keeper_value = Keeper.option_Engineer if keeper_value == Keeper.option_Infiltrator else Keeper.option_Assessor
+        return keeper_value
+
     def get_layers_amount_from_options(self) -> int:
         if self.options.map_size.value == MapSize.option_Small:
             return self.options.small_layers.value
@@ -190,7 +194,7 @@ class DomeKeeperWorld(World):
     def fill_slot_data(self) -> dict[str, str | int | list[int]]:
         return {
             "seed": "".join(self.random.choice(string.digits) for _ in range(8)),
-            "keeper": self.options.keeper.value,
+            "keeper": self.get_keeper(),
             "dome": self.options.dome.value,
             "domeGadget": self.options.dome_gadget.value,
             "mapSize": self.options.map_size.value,
