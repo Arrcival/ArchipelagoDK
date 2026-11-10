@@ -1,5 +1,4 @@
-from typing import Any
-from .Utils import ASSIGNMENTS_AMOUNT
+from .Utils import ASSIGNMENTS_AMOUNT_WITH_DLC
 
 class DomeKeeperLocationData():
     name: str
@@ -18,34 +17,32 @@ ASSIGNMENT_FIRST_ID           = DOME_KEEPER_LOCATION_INDEX + 30
 ASSIGNMENT_CHALLENGE_FIRST_ID = DOME_KEEPER_LOCATION_INDEX + 60
 TREASURE_SYNC_FIRST_ID        = DOME_KEEPER_LOCATION_INDEX + 90
 TREASURE_ASYNC_FIRST_ID       = DOME_KEEPER_LOCATION_INDEX + 100
-CHEST_FIRST_ID          = DOME_KEEPER_LOCATION_INDEX + 200
+CHEST_FIRST_ID                = DOME_KEEPER_LOCATION_INDEX + 200
 SWITCHES_FIRST_ID             = DOME_KEEPER_LOCATION_INDEX + 301
 
-LAYERS_MAX_AMOUNT = 10
-
-UPGRADES_LOCATIONS_AMOUNT = 12
+LAYERS_MAX_AMOUNT = 7
 
 LAYER_OFFSET = 100
 
 location_table_easy_upgrades : list[DomeKeeperLocationData] = [
-    DomeKeeperLocationData("Upgrade Iron 1",             4243001),
-    DomeKeeperLocationData("Upgrade Iron 2",             4243002),
-    DomeKeeperLocationData("Upgrade Water 1",            4243005),
-    DomeKeeperLocationData("Upgrade Water 2",            4243006),
-    DomeKeeperLocationData("Upgrade Iron and Water 1",   4243009),
-    DomeKeeperLocationData("Upgrade Iron and Water 2",   4243010),
+    DomeKeeperLocationData("Upgrade Iron 1",             UPGRADE_FIRST_ID + 1),
+    DomeKeeperLocationData("Upgrade Iron 2",             UPGRADE_FIRST_ID + 2),
+    DomeKeeperLocationData("Upgrade Water 1",            UPGRADE_FIRST_ID + 5),
+    DomeKeeperLocationData("Upgrade Water 2",            UPGRADE_FIRST_ID + 6),
+    DomeKeeperLocationData("Upgrade Iron and Water 1",   UPGRADE_FIRST_ID + 9),
+    DomeKeeperLocationData("Upgrade Iron and Water 2",   UPGRADE_FIRST_ID + 10),
 ]
 
 location_table_normal_upgrades : list[DomeKeeperLocationData] = [
-    DomeKeeperLocationData("Upgrade Iron 3",             4243003),
-    DomeKeeperLocationData("Upgrade Water 3",            4243007),
-    DomeKeeperLocationData("Upgrade Iron and Water 3",   4243011),
+    DomeKeeperLocationData("Upgrade Iron 3",             UPGRADE_FIRST_ID + 3),
+    DomeKeeperLocationData("Upgrade Water 3",            UPGRADE_FIRST_ID + 7),
+    DomeKeeperLocationData("Upgrade Iron and Water 3",   UPGRADE_FIRST_ID + 11),
 ]
 
 location_table_hard_upgrades : list[DomeKeeperLocationData] = [
-    DomeKeeperLocationData("Upgrade Iron 4",             4243004),
-    DomeKeeperLocationData("Upgrade Water 4",            4243008),
-    DomeKeeperLocationData("Upgrade Iron and Water 4",   4243012),
+    DomeKeeperLocationData("Upgrade Iron 4",             UPGRADE_FIRST_ID + 4),
+    DomeKeeperLocationData("Upgrade Water 4",            UPGRADE_FIRST_ID + 8),
+    DomeKeeperLocationData("Upgrade Iron and Water 4",   UPGRADE_FIRST_ID + 12),
 ]
 
 #region Assignments completions
@@ -129,31 +126,31 @@ location_assignment_survival_of_the_fittest_treasure_1 = DomeKeeperLocationData(
 
 
 
-location_assignment_showdown_treasure_2 =            DomeKeeperLocationData("Showdown regular - Treasure 2",    TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 0 )
-location_assignment_iron_contribution_treasure_2 =   DomeKeeperLocationData("Iron contribution - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 1 )
-location_assignment_upside_down_treasure_2 =         DomeKeeperLocationData("Upside down - Treasure 2",         TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 2 )
-location_assignment_maze_treasure_2 =                DomeKeeperLocationData("Maze regular - Treasure 2",        TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 3 )
-location_assignment_projectile_hell_treasure_2 =     DomeKeeperLocationData("Projectile hell - Treasure 2",     TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 4 )
-location_assignment_dense_iron_treasure_2 =          DomeKeeperLocationData("Dense iron  - Treasure 2",         TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 5 )
-location_assignment_barren_lands_treasure_2 =        DomeKeeperLocationData("Barren lands - Treasure 2",        TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 6 )
-location_assignment_defective_weapon_treasure_2 =    DomeKeeperLocationData("Defective weapon - Treasure 2",    TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 7 )
-location_assignment_heavy_hitters_treasure_2 =       DomeKeeperLocationData("Heavy hitters - Treasure 2",       TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 8 )
-location_assignment_swiss_cheese_treasure_2 =        DomeKeeperLocationData("Swiss cheese - Treasure 2",        TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 9 )
-location_assignment_logistical_problem_treasure_2 =  DomeKeeperLocationData("Logistical problem - Treasure 2",  TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 10)
-location_assignment_high_risk_treasure_2 =           DomeKeeperLocationData("High risk - Treasure 2",           TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 11)
-location_assignment_monster_masses_treasure_2 =      DomeKeeperLocationData("Monster masses - Treasure 2",      TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 12)
-location_assignment_iron_shortage_treasure_2 =       DomeKeeperLocationData("Iron shortage - Treasure 2",       TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 13)
-location_assignment_mining_problem_treasure_2 =      DomeKeeperLocationData("Mining problem - Treasure 2",      TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 14)
-location_assignment_cobalt_contribution_treasure_2 = DomeKeeperLocationData("Cobalt contribution - Treasure 2", TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 15)
-location_assignment_broken_comms_treasure_2 =            DomeKeeperLocationData("Broken comms - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 16)
-location_assignment_darkness_treasure_2 =                DomeKeeperLocationData("Darkness - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 17)
-location_assignment_tree_farm_treasure_2 =               DomeKeeperLocationData("Tree farm - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 18)
-location_assignment_acid_rain_treasure_2 =               DomeKeeperLocationData("Acid rain - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 19)
-location_assignment_hazardous_iron_treasure_2 =          DomeKeeperLocationData("Hazardous - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 20)
-location_assignment_emergency_treasure_2 =               DomeKeeperLocationData("Emergency - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 21)
-location_assignment_brutal_monsters_treasure_2 =         DomeKeeperLocationData("Brutal monsters - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 22)
-location_assignment_logistical_nightmare_treasure_2 =    DomeKeeperLocationData("Logistical - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 23)
-location_assignment_survival_of_the_fittest_treasure_2 = DomeKeeperLocationData("Survival of the fittest - Treasure 2",   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 1 + 24)
+location_assignment_showdown_treasure_2 =            DomeKeeperLocationData("Showdown regular - Treasure 2",            TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 0 )
+location_assignment_iron_contribution_treasure_2 =   DomeKeeperLocationData("Iron contribution - Treasure 2",           TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 1 )
+location_assignment_upside_down_treasure_2 =         DomeKeeperLocationData("Upside down - Treasure 2",                 TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 2 )
+location_assignment_maze_treasure_2 =                DomeKeeperLocationData("Maze regular - Treasure 2",                TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 3 )
+location_assignment_projectile_hell_treasure_2 =     DomeKeeperLocationData("Projectile hell - Treasure 2",             TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 4 )
+location_assignment_dense_iron_treasure_2 =          DomeKeeperLocationData("Dense iron  - Treasure 2",                 TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 5 )
+location_assignment_barren_lands_treasure_2 =        DomeKeeperLocationData("Barren lands - Treasure 2",                TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 6 )
+location_assignment_defective_weapon_treasure_2 =    DomeKeeperLocationData("Defective weapon - Treasure 2",            TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 7 )
+location_assignment_heavy_hitters_treasure_2 =       DomeKeeperLocationData("Heavy hitters - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 8 )
+location_assignment_swiss_cheese_treasure_2 =        DomeKeeperLocationData("Swiss cheese - Treasure 2",                TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 9 )
+location_assignment_logistical_problem_treasure_2 =  DomeKeeperLocationData("Logistical problem - Treasure 2",          TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 10)
+location_assignment_high_risk_treasure_2 =           DomeKeeperLocationData("High risk - Treasure 2",                   TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 11)
+location_assignment_monster_masses_treasure_2 =      DomeKeeperLocationData("Monster masses - Treasure 2",              TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 12)
+location_assignment_iron_shortage_treasure_2 =       DomeKeeperLocationData("Iron shortage - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 13)
+location_assignment_mining_problem_treasure_2 =      DomeKeeperLocationData("Mining problem - Treasure 2",              TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 14)
+location_assignment_cobalt_contribution_treasure_2 = DomeKeeperLocationData("Cobalt contribution - Treasure 2",         TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 15)
+location_assignment_broken_comms_treasure_2 =            DomeKeeperLocationData("Broken comms - Treasure 2",            TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 16)
+location_assignment_darkness_treasure_2 =                DomeKeeperLocationData("Darkness - Treasure 2",                TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 17)
+location_assignment_tree_farm_treasure_2 =               DomeKeeperLocationData("Tree farm - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 18)
+location_assignment_acid_rain_treasure_2 =               DomeKeeperLocationData("Acid rain - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 19)
+location_assignment_hazardous_iron_treasure_2 =          DomeKeeperLocationData("Hazardous - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 20)
+location_assignment_emergency_treasure_2 =               DomeKeeperLocationData("Emergency - Treasure 2",               TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 21)
+location_assignment_brutal_monsters_treasure_2 =         DomeKeeperLocationData("Brutal monsters - Treasure 2",         TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 22)
+location_assignment_logistical_nightmare_treasure_2 =    DomeKeeperLocationData("Logistical - Treasure 2",              TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 23)
+location_assignment_survival_of_the_fittest_treasure_2 = DomeKeeperLocationData("Survival of the fittest - Treasure 2", TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT_WITH_DLC * 1 + 24)
 
 
 #location_assignment_showdown_treasure_3 =            DomeKeeperLocationData("Showdown regular - Treasure 3",    TREASURE_ASYNC_FIRST_ID + ASSIGNMENTS_AMOUNT * 2 + 0 )
@@ -285,26 +282,6 @@ location_assignments_second_treasure : list[DomeKeeperLocationData] = [
     location_assignment_survival_of_the_fittest_treasure_2
 ]
 
-#location_assignments_third_treasure : list[DomeKeeperLocationData] = [
-#    location_assignment_showdown_treasure_3,
-#    location_assignment_iron_contribution_treasure_3,
-#    location_assignment_upside_down_treasure_3,
-#    location_assignment_maze_treasure_3,
-#    location_assignment_projectile_hell_treasure_3,
-#    location_assignment_dense_iron_treasure_3,
-#    location_assignment_barren_lands_treasure_3,
-#    location_assignment_defective_weapon_treasure_3,
-#    location_assignment_heavy_hitters_treasure_3,
-#    location_assignment_swiss_cheese_treasure_3,
-#    location_assignment_logistical_problem_treasure_3,
-#    location_assignment_high_risk_treasure_3,
-#    location_assignment_monster_masses_treasure_3,
-#    location_assignment_iron_shortage_treasure_3,
-#    location_assignment_mining_problem_treasure_3,
-#    location_assignment_cobalt_contribution_treasure_3
-#]
-#endregion
-
 def generate_locations_data() -> list[DomeKeeperLocationData] :
     rtr: list[DomeKeeperLocationData] = []
     rtr.extend(location_table_easy_upgrades.copy())
@@ -314,7 +291,6 @@ def generate_locations_data() -> list[DomeKeeperLocationData] :
     rtr.extend(location_assignments_challenge.copy())
     rtr.extend(location_assignments_first_treasure.copy())
     rtr.extend(location_assignments_second_treasure.copy())
-    #rtr.extend(location_assignments_third_treasure.copy())
     rtr.extend(generate_switches_locations())
     rtr.extend(generate_caves_locations())
     rtr.extend(generate_chests_locations())

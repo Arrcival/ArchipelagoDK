@@ -1,6 +1,6 @@
-from typing import NamedTuple, Optional, List, Dict, TYPE_CHECKING
+from typing import NamedTuple, Optional, List, TYPE_CHECKING
 from BaseClasses import Location, LocationProgressType, Region
-from worlds.dome_keeper.Options import ProgressionType
+from worlds.dome_keeper.Options import HaveDLC, ProgressionType
 from .Locations import (
     DomeKeeperLocationData,
     generate_caves_locations,
@@ -13,11 +13,10 @@ from .Locations import (
     location_assignments_challenge,
     location_assignments_regular,
     location_assignments_first_treasure,
-    location_assignments_second_treasure
-    #location_assignments_third_treasure,
+    location_assignments_second_treasure,
 )
 from .Items import item_layer_unlock
-from .Utils import GUILD_ASSIGNMENT_NAMES, layer_region_name, assignment_entrance_name, layer_entrance_name
+from .Utils import GUILD_ASSIGNMENT_NAMES, GUILD_ASSIGNMENT_NAMES_WITH_DLC, layer_region_name, assignment_entrance_name, layer_entrance_name
 
 if TYPE_CHECKING:
     from . import DomeKeeperWorld
@@ -70,25 +69,34 @@ def create_goal_items(world: "DomeKeeperWorld", progression_type: int):
 def create_every_regions_guild_assignments(world: "DomeKeeperWorld"):
     menu_region: Region = world.multiworld.get_region('Menu', world.player)
 
+    has_dlc = world.options.have_dlc.value == HaveDLC.option_true
+
+    assignment_names = GUILD_ASSIGNMENT_NAMES_WITH_DLC if has_dlc else GUILD_ASSIGNMENT_NAMES
+    assignment_count = len(assignment_names)
+    regular_location = location_assignments_regular[:assignment_count]
+    challenge_location = location_assignments_challenge[:assignment_count]
+    first_treasures = location_assignments_first_treasure[:assignment_count]
+    second_treasures = location_assignments_second_treasure[:assignment_count]
+
     progression_locations = []
     non_progression_locations = []
     if world.options.challenge_mode.value:
-        progression_locations = location_assignments_challenge
-        non_progression_locations = location_assignments_regular
+        progression_locations = challenge_location
+        non_progression_locations = regular_location
     else:
-        progression_locations = location_assignments_regular
-        non_progression_locations = location_assignments_challenge
+        progression_locations = regular_location
+        non_progression_locations = challenge_location
 
-    for i in range(len(GUILD_ASSIGNMENT_NAMES)):
-        region = Region(GUILD_ASSIGNMENT_NAMES[i], world.player, world.multiworld)
+    for i, assignment_name in enumerate(assignment_names):
+        region = Region(assignment_name, world.player, world.multiworld)
 
         region.locations.append(map_location(progression_locations[i], world, region, LocationProgressType.DEFAULT))
         region.locations.append(map_location(non_progression_locations[i], world, region, LocationProgressType.EXCLUDED))
-        region.locations.append(map_location(location_assignments_first_treasure[i], world, region, LocationProgressType.DEFAULT))
-        region.locations.append(map_location(location_assignments_second_treasure[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(first_treasures[i], world, region, LocationProgressType.DEFAULT))
+        region.locations.append(map_location(second_treasures[i], world, region, LocationProgressType.DEFAULT))
         #region.locations.append(map_location(location_assignments_third_treasure[i], world, region, LocationProgressType.DEFAULT))
 
-        menu_region.connect(region, assignment_entrance_name(i))
+        _ = menu_region.connect(region, assignment_entrance_name(i))
         world.multiworld.regions.append(region)
 
 def create_every_regions_relic_hunt(world: "DomeKeeperWorld"):

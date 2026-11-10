@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 from BaseClasses import CollectionState, Item
 from worlds.dome_keeper.Items import (
-    generate_keys,
     generate_unlocks,
     item_assessor_spheres_strength,
     item_engineer_drill,
@@ -10,9 +9,14 @@ from worlds.dome_keeper.Items import (
     item_layer_unlock,
     item_keys
 )
-from worlds.dome_keeper.Utils import layer_entrance_name, GUILD_ASSIGNMENT_NAMES, assignment_entrance_name
+from worlds.dome_keeper.Utils import (
+    layer_entrance_name,
+    GUILD_ASSIGNMENT_NAMES,
+    GUILD_ASSIGNMENT_NAMES_WITH_DLC,
+    assignment_entrance_name,
+)
 from worlds.generic.Rules import set_rule
-from worlds.dome_keeper.Options import ProgressionType
+from worlds.dome_keeper.Options import HaveDLC, ProgressionType
 from worlds.dome_keeper.Locations import generate_chests_locations
 
 if TYPE_CHECKING:
@@ -25,11 +29,13 @@ def set_every_rules(world: "DomeKeeperWorld", player: int):
         set_rh_progression_rules(world, player)
 
 def set_guild_assignment_rules(world: "DomeKeeperWorld", player: int):
-    first_assignment = world.options.first_assignment.value
-    unlocks = get_unlocks_without_starting(player, first_assignment)
+    first_assignment = world.get_starting_assignment_index()
+    has_dlc = world.options.have_dlc.value == HaveDLC.option_true
+    assignment_names = GUILD_ASSIGNMENT_NAMES_WITH_DLC if has_dlc else GUILD_ASSIGNMENT_NAMES
+    unlocks = get_unlocks_without_starting(player, first_assignment, has_dlc)
 
     assignment_indexes_to_lock = [
-        i for i in range(len(GUILD_ASSIGNMENT_NAMES)) if i != first_assignment
+        i for i in range(len(assignment_names)) if i != first_assignment
     ]
 
     for unlock, assignment_index in zip(unlocks, assignment_indexes_to_lock):
@@ -73,7 +79,13 @@ def has_mining_upgrade(state: CollectionState, player: int, tier: int) -> bool:
         or state.has(item_infiltrator_progressive_mining.name, player, tier)
         or state.has(item_beastmaster_mining.name, player, tier))
 
-def get_unlocks_without_starting(player: int, first_assignment: int) -> list[Item]:
-    unlocks: list[Item] = generate_unlocks(player)
+def get_unlocks_without_starting(player: int, first_assignment: int, has_dlc: int) -> list[Item]:
+    unlocks: list[Item] = generate_unlocks(player, has_dlc)
+    if first_assignment < 0:
+        raise ValueError(f"Starting assignment index cannot be negative: {first_assignment}")
+    if first_assignment >= len(unlocks):
+        raise ValueError(
+            f"Starting assignment index {first_assignment} is unavailable with DLC={bool(has_dlc)}"
+        )
     unlocks.pop(first_assignment)
     return unlocks

@@ -53,38 +53,6 @@ class MapSize(Choice):
     option_Huge = 3
     default = 3
 
-class SmallLayersAmount(Range):
-    """How many layers there is in a small map"""
-    internal_name = "small_layers"
-    range_start = 3
-    range_end = 6
-    default = 4
-    display_name = "Small map layers amount"
-
-class MediumLayersAmount(Range):
-    """How many layers there is in a medium map"""
-    internal_name = "medium_layers"
-    range_start = 3
-    range_end = 8
-    default = 6
-    display_name = "Medium map layers amount"
-
-class LargeLayersAmount(Range):
-    """How many layers there is in a large map"""
-    internal_name = "large_layers"
-    range_start = 3
-    range_end = 10
-    default = 7
-    display_name = "Large map layers amount"
-
-class HugeLayersAmount(Range):
-    """How many layers there is in a huge map"""
-    internal_name = "huge_layers"
-    range_start = 3
-    range_end = 10
-    default = 8
-    display_name = "Huge map layers amount"
-
 class Difficulty(Choice):
     """What difficulty do you wish to play with."""
     internal_name = "difficulty"
@@ -330,10 +298,6 @@ class DomeKeeperOptions(PerGameCommonOptions):
     dome: Dome
     dome_gadget: DomeGadget
     map_size: MapSize
-    small_layers: SmallLayersAmount
-    medium_layers: MediumLayersAmount
-    large_layers: LargeLayersAmount
-    huge_layers: HugeLayersAmount
     difficulty: Difficulty
     death_link: DeathLink
     drill_upgrades: DrillUpgradesAmount

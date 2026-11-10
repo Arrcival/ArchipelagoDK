@@ -37,13 +37,17 @@ from .Option_Groups import dk_option_groups
 from .Locations import generate_locations_data, get_non_switch_location_count
 from .Regions import create_every_regions
 from .Presets import dk_options_presets
-from .Utils import ASSIGNMENTS_AMOUNT
+from .Utils import ASSIGNMENTS_AMOUNT, ASSIGNMENTS_AMOUNT_WITH_DLC
 
-AP_VERSION = "2.0.2"
+AP_VERSION = "2.1.0"
 
 TOTAL_GA_LOCATIONS = ASSIGNMENTS_AMOUNT * 4  # regular + challenge + 2 treasures
 TOTAL_GA_UNLOCKS = ASSIGNMENTS_AMOUNT - 1    # one assignment starts unlocked
 TOTAL_RESOURCES_GA = TOTAL_GA_LOCATIONS - TOTAL_GA_UNLOCKS
+
+TOTAL_GA_LOCATIONS_DLC = ASSIGNMENTS_AMOUNT_WITH_DLC * 4  # regular + challenge + 2 treasures
+TOTAL_GA_UNLOCKS_DLC = ASSIGNMENTS_AMOUNT_WITH_DLC - 1    # one assignment starts unlocked
+TOTAL_RESOURCES_GA_DLC = TOTAL_GA_LOCATIONS_DLC - TOTAL_GA_UNLOCKS_DLC
 
 class DomeKeeperWeb(WebWorld):
     options_presets = dk_options_presets
@@ -86,10 +90,17 @@ class DomeKeeperWorld(World):
     def set_rules(self):
         set_every_rules(self, self.player)
 
+    def get_starting_assignment_index(self) -> int:
+        starting_assignment = self.options.first_assignment.value
+        if self.options.have_dlc.value == HaveDLC.option_false and starting_assignment >= ASSIGNMENTS_AMOUNT:
+            # shouldn't occur, mismatch, assignment selected is DLC
+            return 0
+        return starting_assignment
+
     def generate_early(self):
         if self.options.progression_type.value == ProgressionType.option_Guild_Assignments:
-
-            unlocks: list[Item] = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
+            has_dlc = self.options.have_dlc.value
+            unlocks: list[Item] = get_unlocks_without_starting(self.player, self.get_starting_assignment_index(), has_dlc)
             self.goal_items += [item.name for item in unlocks]
             return
 
@@ -110,10 +121,13 @@ class DomeKeeperWorld(World):
 
         # Async items
         if self.options.progression_type.value == ProgressionType.option_Guild_Assignments:
-            unlocks = get_unlocks_without_starting(self.player, self.options.first_assignment.value)
+            has_dlc = self.options.have_dlc.value
+            unlocks = get_unlocks_without_starting(self.player, self.get_starting_assignment_index(), has_dlc)
             pool += unlocks
 
-            iron_amount = TOTAL_RESOURCES_GA - self.options.starting_water.value 
+            iron_amount = TOTAL_RESOURCES_GA_DLC if has_dlc else TOTAL_RESOURCES_GA
+
+            iron_amount -= self.options.starting_water.value 
             iron_amount -= self.options.starting_cobalt.value 
             iron_amount -= self.options.trap_wave.value
             iron_amount -= self.options.mining_strength_amount.value
@@ -174,12 +188,12 @@ class DomeKeeperWorld(World):
 
     def get_layers_amount_from_options(self) -> int:
         if self.options.map_size.value == MapSize.option_Small:
-            return self.options.small_layers.value
+            return 3
         if self.options.map_size.value == MapSize.option_Medium:
-            return self.options.medium_layers.value
+            return 4
         if self.options.map_size.value == MapSize.option_Large:
-            return self.options.large_layers.value
-        return self.options.huge_layers.value
+            return 6
+        return 7
 
     def create_items(self):
         self.multiworld.itempool += self._build_item_pool()
@@ -211,7 +225,7 @@ class DomeKeeperWorld(World):
             "progressionType": self.options.progression_type.value,
             "miningEverything": self.options.mining_everything.value,
             "assignmentsAmount": self.options.assignment_amount.value,
-            "startingGA": self.options.first_assignment.value,
+            "startingGA": self.get_starting_assignment_index(),
             "defaultMining": self.options.default_mining_strength.value,
             "miningBonus": self.options.mining_strength_value.value,
             "defaultMovement": self.options.default_movement_speed.value,

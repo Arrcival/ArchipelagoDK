@@ -2,7 +2,7 @@
 from typing import Any, Dict
 from .Options import (
     MustBeChallengeMode, ProgressionType, MapSize, DrillUpgradesAmount, KineticSpheresUpgradesAmount, 
-    ExtraCobaltFiller, Keeper, Dome, DomeGadget, StartingAssignment, StartingCobaltItems, StartingWaterItems, 
+    Keeper, Dome, DomeGadget, StartingAssignment, StartingCobaltItems, StartingWaterItems, 
     TrapWaveShortener,
     DefaultMiningStrength,
     MiningStrengthBonusValue,

@@ -18,7 +18,9 @@ GUILD_ASSIGNMENT_NAMES = [
     "Iron shortage",
     "Mining problem",
     "Cobalt contribution",
-    
+]
+
+GUILD_ASSIGNMENT_NAMES_WITH_DLC = GUILD_ASSIGNMENT_NAMES + [
     "Broken comms",
     "Darkness",
     "Tree Farm",
@@ -27,10 +29,12 @@ GUILD_ASSIGNMENT_NAMES = [
     "Emergency",
     "Brutal Monsters",
     "Logistical Nightmare",
-    "Survival of the Fittest"
+    "Survival of the Fittest",
 ]
 
 ASSIGNMENTS_AMOUNT: int = len(GUILD_ASSIGNMENT_NAMES)
+ASSIGNMENTS_AMOUNT_WITH_DLC: int = len(GUILD_ASSIGNMENT_NAMES_WITH_DLC)
+
 
 def layer_region_name(layer_number: int) -> str:
     return f"{LAYER_PREFIX} {layer_number}"
@@ -39,8 +43,5 @@ def layer_entrance_name(from_layer_number: int) -> str:
     # entrance from layer N to layer N+1
     return f"{layer_region_name(from_layer_number)}{ENTRANCE_SUFFIX}"
 
-def layer_treasure_location_name(layer_number: int) -> str:
-    return f"{layer_region_name(layer_number)} - Treasure"
-
 def assignment_entrance_name(assignment_id: int) -> str:
-    return GUILD_ASSIGNMENT_NAMES[assignment_id]
+    return GUILD_ASSIGNMENT_NAMES_WITH_DLC[assignment_id]

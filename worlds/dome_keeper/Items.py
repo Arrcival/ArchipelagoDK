@@ -180,34 +180,6 @@ item_assignment_starting_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_IN
 item_assignment_mining_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 33, "Progressive mining strength")
 item_assignment_movement_speed:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 34, "Progressive movement speed")
 
-item_assignments = [
-    item_assignment_unlock_showdown,
-    item_assignment_unlock_iron_contribution,
-    item_assignment_unlock_upside_down,     
-    item_assignment_unlock_maze,           
-    item_assignment_unlock_projectile_hell,
-    item_assignment_unlock_dense_iron,      
-    item_assignment_unlock_barren_lands,   
-    item_assignment_unlock_defective_weapon,
-    item_assignment_unlock_heavy_hitters,   
-    item_assignment_unlock_swiss_cheese,   
-    item_assignment_unlock_logistical_problem,
-    item_assignment_unlock_high_risk,        
-    item_assignment_unlock_monster_masses,   
-    item_assignment_unlock_iron_shortage,
-    item_assignment_unlock_mining_problem, 
-    item_assignment_unlock_cobalt_contribution,
-    item_assignment_unlock_broken_comms,         
-    item_assignment_unlock_darkness,            
-    item_assignment_unlock_tree_farm,           
-    item_assignment_unlock_acid_rain,          
-    item_assignment_unlock_hazardous_iron,      
-    item_assignment_unlock_emergency,         
-    item_assignment_unlock_brutal_monsters,     
-    item_assignment_unlock_logistical_nightmare,
-    item_assignment_unlock_survival_of_the_fittest
-]
-
 #endregion
 
 all_items : list[ItemDataCode] = [
@@ -376,7 +348,7 @@ def generate_iron_upgrades(player: int, iron_amount: int) -> list[Item]:
     rtr: list[Item] = generate_items(player, item_filler_iron, iron_amount)
     return rtr
 
-def generate_unlocks(player: int) -> list[Item]:
+def generate_unlocks(player: int, has_dlc: int) -> list[Item]:
     rtr: list[Item] = []
     rtr.append(generate_item(player, item_assignment_unlock_showdown           ))
     rtr.append(generate_item(player, item_assignment_unlock_iron_contribution  ))
@@ -394,15 +366,16 @@ def generate_unlocks(player: int) -> list[Item]:
     rtr.append(generate_item(player, item_assignment_unlock_iron_shortage      ))
     rtr.append(generate_item(player, item_assignment_unlock_mining_problem     ))
     rtr.append(generate_item(player, item_assignment_unlock_cobalt_contribution))
-    rtr.append(generate_item(player, item_assignment_unlock_broken_comms          ))
-    rtr.append(generate_item(player, item_assignment_unlock_darkness              ))
-    rtr.append(generate_item(player, item_assignment_unlock_tree_farm             ))
-    rtr.append(generate_item(player, item_assignment_unlock_acid_rain             ))
-    rtr.append(generate_item(player, item_assignment_unlock_hazardous_iron        ))
-    rtr.append(generate_item(player, item_assignment_unlock_emergency             ))
-    rtr.append(generate_item(player, item_assignment_unlock_brutal_monsters       ))
-    rtr.append(generate_item(player, item_assignment_unlock_logistical_nightmare  ))
-    rtr.append(generate_item(player, item_assignment_unlock_survival_of_the_fittest))
+    if has_dlc:
+        rtr.append(generate_item(player, item_assignment_unlock_broken_comms          ))
+        rtr.append(generate_item(player, item_assignment_unlock_darkness              ))
+        rtr.append(generate_item(player, item_assignment_unlock_tree_farm             ))
+        rtr.append(generate_item(player, item_assignment_unlock_acid_rain             ))
+        rtr.append(generate_item(player, item_assignment_unlock_hazardous_iron        ))
+        rtr.append(generate_item(player, item_assignment_unlock_emergency             ))
+        rtr.append(generate_item(player, item_assignment_unlock_brutal_monsters       ))
+        rtr.append(generate_item(player, item_assignment_unlock_logistical_nightmare  ))
+        rtr.append(generate_item(player, item_assignment_unlock_survival_of_the_fittest))
     return rtr
 
 def generate_keys(player: int, layers_amount: int) -> list[Item]:
