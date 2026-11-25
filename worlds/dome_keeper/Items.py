@@ -1,4 +1,5 @@
 from BaseClasses import Item, ItemClassification as IC
+from typing import Dict, Set
 
 DOME_KEEPER_ITEM_INDEX = 4242000
 
@@ -31,6 +32,8 @@ DOME_KEEPER_ITEM_INDEX_BEASTMASTER = DOME_KEEPER_ITEM_INDEX + 120
 DOME_KEEPER_ITEM_INDEX_KEY = DOME_KEEPER_ITEM_INDEX + 130
 
 DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS = DOME_KEEPER_ITEM_INDEX + 200
+DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES = DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 30
+DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES = DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 33
 #endregion
 
 item_trap_wave_shortened : ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_TRAP, "Wave shortened", IC.trap)
@@ -173,12 +176,12 @@ item_assignment_unlock_logistical_nightmare:    ItemDataCode = ItemDataCode(DOME
 item_assignment_unlock_survival_of_the_fittest: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 24, "Survival of the Fittest assignment unlock", IC.progression)
 
 
-item_assignment_starting_iron:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 30, "Extra starting iron", IC.filler)
-item_assignment_starting_water:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 31, "Extra starting water", IC.filler)
-item_assignment_starting_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 32, "Extra starting cobalt", IC.filler)
+item_assignment_starting_iron:   ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES + 0, "Extra starting iron", IC.filler)
+item_assignment_starting_water:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES + 1, "Extra starting water", IC.filler)
+item_assignment_starting_cobalt: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES + 2, "Extra starting cobalt", IC.filler)
 
-item_assignment_mining_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 33, "Progressive mining strength")
-item_assignment_movement_speed:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS + 34, "Progressive movement speed")
+item_assignment_mining_strength: ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES + 0, "Progressive mining strength")
+item_assignment_movement_speed:  ItemDataCode = ItemDataCode(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES + 1, "Progressive movement speed")
 
 #endregion
 
@@ -401,3 +404,39 @@ def generate_mining_strength_rewards(player: int, mining_strength_rewards: int) 
 
 def generate_movement_speed_rewards(player: int, movement_speed_rewards: int) -> list[Item]:
     return generate_items(player, item_assignment_movement_speed, movement_speed_rewards)
+
+def get_item_name_groups() -> Dict[str, Set[str]]:
+    region_groups = {
+    range(DOME_KEEPER_ITEM_INDEX_ENGINEER,DOME_KEEPER_ITEM_INDEX_ASSESSOR):"Engineer Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_ASSESSOR,DOME_KEEPER_ITEM_INDEX_LASER):"Assessor Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_LASER,DOME_KEEPER_ITEM_INDEX_SWORD):"Laser Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_SWORD,DOME_KEEPER_ITEM_INDEX_ARTILLERY):"Sword Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_ARTILLERY,DOME_KEEPER_ITEM_INDEX_TESLA):"Artillery Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_TESLA,DOME_KEEPER_ITEM_INDEX_REPELLENT):"Tesla Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_REPELLENT,DOME_KEEPER_ITEM_INDEX_SHIELD):"Repellent Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_SHIELD,DOME_KEEPER_ITEM_INDEX_ORCHARD):"Shield Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_ORCHARD,DOME_KEEPER_ITEM_INDEX_DRONEYARD):"Orchard Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_DRONEYARD,DOME_KEEPER_ITEM_INDEX_COBALT):"Droneyard Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_COBALT,DOME_KEEPER_ITEM_INDEX_TRAP):"Relic Hunt Resources",
+    range(DOME_KEEPER_ITEM_INDEX_TRAP,DOME_KEEPER_ITEM_INDEX_LAYERS):"Traps",
+    range(DOME_KEEPER_ITEM_INDEX_LAYERS,DOME_KEEPER_ITEM_INDEX_INFILTRATOR):"Layer Unlocks",
+    range(DOME_KEEPER_ITEM_INDEX_INFILTRATOR,DOME_KEEPER_ITEM_INDEX_BEASTMASTER):"Infiltrator Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_BEASTMASTER,DOME_KEEPER_ITEM_INDEX_KEY):"Beastmaster Upgrades",
+    range(DOME_KEEPER_ITEM_INDEX_KEY,DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS):"Keys",
+    range(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS,DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES):"Assignment Unlocks",
+    range(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_RESOURCES,DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES):"Assignment Resources",
+    range(DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES,DOME_KEEPER_ITEM_INDEX_ASSIGNMENTS_UPGRADES+50):"Assignment Upgrades"
+    }
+
+    groups = {}
+
+    for item in all_items:
+        for region in region_groups:
+            if item.code in region:
+                groups.setdefault(region_groups[region], set()).add(item.name)
+
+    groups["Keeper Upgrades"] = groups["Engineer Upgrades"] | groups["Assessor Upgrades"] | groups["Infiltrator Upgrades"] | groups["Beastmaster Upgrades"] | groups["Assignment Upgrades"]
+    groups["Dome Upgrades"] = groups["Laser Upgrades"] | groups["Sword Upgrades"] | groups["Artillery Upgrades"] | groups["Tesla Upgrades"]
+    groups["Gadget Upgrades"] = groups["Repellent Upgrades"] | groups["Shield Upgrades"] | groups["Orchard Upgrades"] | groups["Droneyard Upgrades"]
+
+    return groups

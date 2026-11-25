@@ -30,11 +30,12 @@ from .Items import (
     generate_mining_strength_rewards,
     generate_movement_speed_rewards,
     item_filler_iron,
-    ItemDataCode
+    ItemDataCode,
+    get_item_name_groups
 )
 from .Options import Dome, DomeKeeperOptions, Keeper, DomeGadget, ProgressionType, HaveDLC, MapSize
 from .Option_Groups import dk_option_groups
-from .Locations import generate_locations_data, get_non_switch_location_count
+from .Locations import generate_locations_data, get_non_switch_location_count, get_location_name_groups
 from .Regions import create_every_regions
 from .Presets import dk_options_presets
 from .Utils import ASSIGNMENTS_AMOUNT, ASSIGNMENTS_AMOUNT_WITH_DLC
@@ -78,6 +79,9 @@ class DomeKeeperWorld(World):
     items_by_name: dict[str, ItemDataCode]
     switches_per_layer: list[int]
     goal_items: list[str]
+
+    location_name_groups = get_location_name_groups()
+    item_name_groups = get_item_name_groups()
 
     def __init__(self, multiworld: MultiWorld, player: int):
         super().__init__(multiworld, player)

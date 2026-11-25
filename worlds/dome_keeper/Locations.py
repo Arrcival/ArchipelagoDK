@@ -1,4 +1,5 @@
 from .Utils import ASSIGNMENTS_AMOUNT_WITH_DLC
+from typing import Dict, Set
 
 class DomeKeeperLocationData():
     name: str
@@ -23,6 +24,8 @@ SWITCHES_FIRST_ID             = DOME_KEEPER_LOCATION_INDEX + 301
 LAYERS_MAX_AMOUNT = 7
 
 LAYER_OFFSET = 100
+
+DIRTY_MAGIC_LAYER_NUMBER_INDEX = 6
 
 location_table_easy_upgrades : list[DomeKeeperLocationData] = [
     DomeKeeperLocationData("Upgrade Iron 1",             UPGRADE_FIRST_ID + 1),
@@ -341,3 +344,39 @@ def get_non_switch_location_count(layers: int) -> int:
     chests_count = layers
 
     return upgrades_count + caves_count + treasures_count + chests_count
+
+def get_location_name_groups() -> Dict[str, Set[str]]:
+    groups = {}
+
+    for location in location_table_easy_upgrades:
+        groups.setdefault("Sphere 1 Upgrades", set()).add(location.name)
+    for location in location_table_normal_upgrades:
+        groups.setdefault("Sphere 2 Upgrades", set()).add(location.name)
+    for location in location_table_hard_upgrades:
+        groups.setdefault("Sphere 3 Upgrades", set()).add(location.name)
+
+    for location in generate_switches_locations():
+        groups.setdefault("Switches", set()).add(location.name)
+    for location in generate_caves_locations():
+        groups.setdefault("Caves", set()).add(location.name)
+    for location in generate_chests_locations():
+        groups.setdefault("Chests", set()).add(location.name)
+    for location in generate_treasures_locations():
+        groups.setdefault("Treasures", set()).add(location.name)
+
+    layers = groups["Switches"] | groups["Caves"] | groups["Chests"] | groups["Treasures"]
+
+    for location in layers:
+        groups.setdefault("Layer " + location[DIRTY_MAGIC_LAYER_NUMBER_INDEX], set()).add(location)
+
+    for location in location_assignments_regular:
+        groups.setdefault("Assignment Regular Completions", set()).add(location.name)
+    for location in location_assignments_challenge:
+        groups.setdefault("Assignment Challenge Completions", set()).add(location.name)
+
+    for location in location_assignments_first_treasure:
+        groups.setdefault("Assignment Treasures", set()).add(location.name)
+    for location in location_assignments_second_treasure:
+        groups.setdefault("Assignment Treasures", set()).add(location.name)
+
+    return groups
